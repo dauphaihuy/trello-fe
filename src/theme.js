@@ -5,7 +5,7 @@ import {
 } from '@mui/material/styles'
 // Create a theme instance.
 const APP_BAR_HEIGHT = '60px'
-const BOARD_BAR_HEIGHT = '60px'
+const BOARD_BAR_HEIGHT = '62px'
 
 const theme = extendTheme({
     colorSchemeSelector: 'class',
