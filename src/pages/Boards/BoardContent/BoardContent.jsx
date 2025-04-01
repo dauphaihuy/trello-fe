@@ -9,6 +9,7 @@ function BoardContent() {
             display: 'flex',
             alignItems: 'center',
             height: (theme) => theme.trello.boardContentHeight,
+            bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
         }}>
             vo quoc huy
         </Box>

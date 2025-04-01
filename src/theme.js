@@ -41,11 +41,11 @@ const theme = extendTheme({
                         height: '8px'
                     },
                     '*::-webkit-scrollbar-thumb': {
-                        backgroundColor: '#bdc3c7',
+                        backgroundColor: '#dcdde1',
                         borderRadius: '8px'
                     },
                     '*::-webkit-scrollbar-thumb:hover': {
-                        backgroundColor: '#00b894',
+                        backgroundColor: 'white',
                         borderRadius: '8px'
                     }
                 }
@@ -56,7 +56,8 @@ const theme = extendTheme({
                 // Name of the slot
                 root: {
                     // Some CSS
-                    textTransform: 'none'
+                    textTransform: 'none',
+                    borderWidth: '0.5px'
                 },
             },
         },
@@ -82,9 +83,10 @@ const theme = extendTheme({
                             borderColor: theme.palette.primary.main
                         }
                     },
-                    '& fieldset': {
-                        borderWidth: '1px !important'
-                    }
+                    '& fieldset': { borderWidth: '0.5px !important' },
+                    '&:hover fieldset': { borderWidth: '1px !important' },
+                    '&.Mui-focused fieldset': { borderWidth: '1px !important' }
+
                 })
             },
         }
