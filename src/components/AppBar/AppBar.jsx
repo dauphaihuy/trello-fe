@@ -19,7 +19,9 @@ function AppBar() {
             height: (theme) => theme.trello.appBarHeight,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            gap: 2,
+            overflowX: 'auto'
         }}>
             <Box sx={{
                 display: 'flex',
@@ -34,34 +36,45 @@ function AppBar() {
                     justifyContent: 'space-around',
                     gap: 2
                 }}>
-                    <AssessmentIcon sx={{ color: 'primary.main' }} />
+                    <AssessmentIcon sx={{ color: 'primary.main', fontSize: 'x-large' }} />
                     <Typography variant='span'
                         sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'primary.main' }}>
                         Trello
                     </Typography>
                 </Box>
-                <WorkSpaces />
-                <Recent />
-                <Started />
-                <Templates />
+                {/* menu */}
+                <Box sx={{
+                    display: {
+                        xs: 'none', md: 'flex',
+                        gap: 1
+                    }
+                }}>
+                    <WorkSpaces />
+                    <Recent />
+                    <Started />
+                    <Templates />
+                </Box>
+
+                {/* end menu */}
                 <Button variant='outlined'>Create</Button>
             </Box>
-            <Box></Box>
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 2
             }}>
-                <TextField type='search' variant='outlined' label='search' />
+                <TextField sx={{ minWidth: '120px' }} type='search' variant='outlined' label='search' size='small' />
+                {/* chon theme */}
                 <ModeSelect />
+                {/* bell */}
                 <Tooltip title="Notifications">
                     <Badge badgeContent={4} color="primary" sx={{ cursor: 'pointer' }}>
-                        <NotificationsNoneIcon color="action" />
+                        <NotificationsNoneIcon sx={{ color: 'primary.main' }} />
                     </Badge>
                 </Tooltip>
                 <Tooltip title="Help">
                     <Badge badgeContent={1} color="primary" sx={{ cursor: 'pointer' }}>
-                        <HelpOutlineIcon color="action" />
+                        <HelpOutlineIcon sx={{ color: 'primary.main' }} />
                     </Badge>
                 </Tooltip>
                 <Profiles />
