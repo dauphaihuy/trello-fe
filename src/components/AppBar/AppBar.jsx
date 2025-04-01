@@ -11,9 +11,10 @@ import Badge from '@mui/material/Badge'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Avatar from '@mui/material/Avatar'
 import Profiles from './Menus/Profiles'
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 function AppBar() {
     return (
-        <Box px={2} sx={{
+        <Box sx={{
             backgroundColor: '',
             width: '100%',
             height: (theme) => theme.trello.appBarHeight,
@@ -21,7 +22,8 @@ function AppBar() {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: 2,
-            overflowX: 'auto'
+            overflowX: 'auto',
+            paddingX: 2
         }}>
             <Box sx={{
                 display: 'flex',
@@ -56,7 +58,7 @@ function AppBar() {
                 </Box>
 
                 {/* end menu */}
-                <Button variant='outlined'>Create</Button>
+                <Button variant='outlined' startIcon={<LibraryAddIcon />}>Create</Button>
             </Box>
             <Box sx={{
                 display: 'flex',
