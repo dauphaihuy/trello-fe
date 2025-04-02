@@ -18,12 +18,14 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCard from './ListCard/ListCard'
+import { mapOrder } from '../../../../../utils/formatters'
 
-function Column() {
+function Column({ column }) {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
     const handleClick = (event) => { setAnchorEl(event.currentTarget) }
     const handleClose = () => { setAnchorEl(null) }
+    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
     return (
         <Box sx={{
             minWidth: 300,
@@ -42,7 +44,8 @@ function Column() {
                 alignItems: 'center',
                 justifyContent: 'space-between'
             }}>
-                <Typography sx={{ fontWeight: 'bold', cursor: 'pointer' }}>Column Title</Typography>
+                {/* column title */}
+                <Typography sx={{ fontWeight: 'bold', cursor: 'pointer' }}>{column?.title}</Typography>
                 {/* drop down */}
                 <Box>
                     <Tooltip title="More options">
@@ -92,7 +95,7 @@ function Column() {
                 </Box>
             </Box>
             {/* list card */}
-            <ListCard />
+            <ListCard cards={orderedCards} />
 
             {/* footer */}
             <Box sx={{
