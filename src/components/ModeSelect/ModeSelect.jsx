@@ -11,7 +11,9 @@ function ModeSelect() {
     const handleChange = (event) => {
         setMode(event.target.value)
     };
-
+    if (!mode) {
+        return null;
+    }
     return (
         <FormControl sx={{ minWidth: 100 }} size="small">
             <InputLabel
@@ -43,7 +45,7 @@ function ModeSelect() {
                         <LightModeIcon fontSize='small' /> Light
                     </Box>
                 </MenuItem>
-                <MenuItem value={'system'}>
+                <MenuItem value='system'>
                     <Box sx={{
                         display: 'flex', alignItems: 'center',
                         gap: 1
