@@ -8,6 +8,7 @@ import LanguageIcon from '@mui/icons-material/Language'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
+import { capitalizeFirstLetter } from '../../../utils/formatters'
 const MENU_STYLES = {
     color: 'white',
     bgcolor: 'transparent',
@@ -21,7 +22,7 @@ const MENU_STYLES = {
         bgcolor: 'primary.50'
     }
 }
-function BoardBar() {
+function BoardBar({ board }) {
     return (
         <Box sx={{
             width: '100%',
@@ -38,12 +39,12 @@ function BoardBar() {
                 display: 'flex', alignItems: 'center', gap: 2
             }}>
                 <Chip
-                    label={'huy dz'}
+                    label={board?.title}
                     sx={MENU_STYLES} icon={<DashboardIcon />}
                     onClick={() => { }} variant="outlined" />
                 {/*  */}
                 <Chip
-                    label={'public/private Workspace'}
+                    label={capitalizeFirstLetter(board?.type)}
                     sx={MENU_STYLES} icon={<LanguageIcon />}
                     onClick={() => { }} variant="outlined"
                 />

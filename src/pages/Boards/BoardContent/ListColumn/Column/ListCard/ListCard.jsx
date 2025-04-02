@@ -2,7 +2,7 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import Cards from './Card/Cards'
 
-function ListCard() {
+function ListCard({ cards }) {
     return (
         <Box sx={{
             display: 'flex',
@@ -18,8 +18,8 @@ function ListCard() {
             '&::-webkit-scrollbar-thumb': { backgroundColor: '#ced0da' },
             '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#bfc2cf' }
         }}>
+            {cards?.map(card => <Cards key={card?._id} card={card} />)}
 
-            <Cards />
         </Box>
     )
 }

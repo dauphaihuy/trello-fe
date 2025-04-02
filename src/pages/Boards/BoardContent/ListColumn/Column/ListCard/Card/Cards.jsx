@@ -9,26 +9,32 @@ import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 
-function Cards() {
+function Cards({ card }) {
+
+    const shouldShowCardActions = () => {
+        return !!card?.memberIds.length || !!card?.comments.length || !!card?.attachments.length
+    }
     return (
         <Card sx={{
             cursor: 'pointer',
             boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
             overflow: 'unset'
         }}>
-            <CardMedia
+            {card?.cover && <CardMedia
                 sx={{ height: 140 }}
-                image="https://picsum.photos/seed/picsum/200/300"
-                title="green iguana"
-            />
+                image={card?.cover}
+                title=""
+            />}
+
             <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-                <Typography>Huydz </Typography>
+                <Typography>{card?.title}</Typography>
             </CardContent>
-            <CardActions sx={{ p: '0 4px 8px 4px' }}>
-                <Button size="small" startIcon={<GroupIcon />}>20</Button>
-                <Button size="small" startIcon={<ChatBubbleOutlineIcon />}>20</Button>
-                <Button size="small" startIcon={<AttachFileIcon />}>20</Button>
-            </CardActions>
+            {shouldShowCardActions() &&
+                <CardActions sx={{ p: '0 4px 8px 4px' }}>
+                    {!!card?.memberIds.length && <Button size="small" startIcon={<GroupIcon />}>{card?.memberIds?.length}</Button>}
+                    {!!card?.comments.length && <Button size="small" startIcon={<ChatBubbleOutlineIcon />}>{card?.comments?.length}</Button>}
+                    {!!card?.attachments.length && <Button size="small" startIcon={<AttachFileIcon />}>{card?.attachments?.length}</Button>}
+                </CardActions>}
         </Card>
     )
 }

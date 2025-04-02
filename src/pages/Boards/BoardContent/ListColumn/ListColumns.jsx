@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Column from './Column/Column'
 import { Button } from '@mui/material'
 import AddchartIcon from '@mui/icons-material/Addchart'
-function ListColumns() {
+function ListColumns({ columns }) {
     return (
         <Box sx={{
             bgcolor: 'inherit',
@@ -18,8 +18,8 @@ function ListColumns() {
 
         }}>
             {/*box column */}
-            <Column />
-            <Column />
+            {columns?.map((column, i) => <Column key={i} column={column} />)}
+
             <Box sx={{
                 minWidth: '150px',
                 maxWidth: 200,
