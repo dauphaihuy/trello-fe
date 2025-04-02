@@ -1,5 +1,6 @@
 import { cyan, deepOrange, orange, red, teal } from '@mui/material/colors'
 import {
+    createTheme,
     Experimental_CssVarsProvider as CssVarsProvider,
     extendTheme,
 } from '@mui/material/styles'
@@ -7,7 +8,7 @@ import {
 const APP_BAR_HEIGHT = '56px'
 const BOARD_BAR_HEIGHT = '60px'
 const BOARD_BAR_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
-const theme = extendTheme({
+const theme = createTheme({
     colorSchemeSelector: 'class',
     trello: {
         appBarHeight: APP_BAR_HEIGHT,
@@ -58,6 +59,14 @@ const theme = extendTheme({
                     // Some CSS
                     textTransform: 'none',
                     borderWidth: '0.5px'
+                },
+            },
+        },
+        MuiTypography: {
+            styleOverrides: {
+                // Name of the slot
+                root: {
+                    '&.MuiTypography-body1': { fontSize: '0.875rem' }
                 },
             },
         },
