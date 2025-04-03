@@ -8,18 +8,36 @@ import Button from '@mui/material/Button'
 import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
-
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 function Cards({ card }) {
-
+    const {
+        isDragging,
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: card?._id, data: { ...card } })
+    const style = {
+        transform: CSS.Translate.toString(transform),
+        opacity: isDragging ? 0.5 : 1,
+        touchAction: 'none',
+        transition,
+    }
     const shouldShowCardActions = () => {
         return !!card?.memberIds.length || !!card?.comments.length || !!card?.attachments.length
     }
     return (
-        <Card sx={{
-            cursor: 'pointer',
-            boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-            overflow: 'unset'
-        }}>
+        <Card
+            ref={setNodeRef}
+            style={style}
+            {...attributes} {...listeners}
+            sx={{
+                cursor: 'pointer',
+                boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
+                overflow: 'unset'
+            }}>
             {card?.cover && <CardMedia
                 sx={{ height: 140 }}
                 image={card?.cover}
