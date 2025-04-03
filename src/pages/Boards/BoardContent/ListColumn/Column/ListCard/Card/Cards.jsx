@@ -24,6 +24,7 @@ function Cards({ card }) {
         opacity: isDragging ? 0.5 : 1,
         touchAction: 'none',
         transition,
+        border: isDragging ? '1px solid #030303' : '',
     }
     const shouldShowCardActions = () => {
         return !!card?.memberIds.length || !!card?.comments.length || !!card?.attachments.length
