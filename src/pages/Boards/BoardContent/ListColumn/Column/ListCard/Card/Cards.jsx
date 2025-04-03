@@ -25,6 +25,7 @@ function Cards({ card }) {
         touchAction: 'none',
         transition,
         border: isDragging ? '1px solid #030303' : '',
+        transition
     }
     const shouldShowCardActions = () => {
         return !!card?.memberIds.length || !!card?.comments.length || !!card?.attachments.length

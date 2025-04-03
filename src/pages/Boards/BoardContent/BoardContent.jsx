@@ -10,7 +10,8 @@ import {
     useSensor,
     useSensors,
     DragOverlay,
-    defaultDropAnimationSideEffects
+    defaultDropAnimationSideEffects,
+    closestCorners
 
 
 } from '@dnd-kit/core'
@@ -50,6 +51,44 @@ function BoardContent({ board }) {
         const orderedColumns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
         setorderedColumns(orderedColumns)
     }, [])
+    const moveCardBetWeenDiffColumns = (overColumn,
+        overCardId,
+        active,
+        over,
+        activeColumn,
+        activeDraggingCardId,
+        activeDraggingCardData
+    ) => {
+        setorderedColumns(prevColumn => {
+            const overCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
+            let newCardIndex
+            const isBelowOverItem = active.rect.current.translated &&
+                active.rect.current.translated.top > over.rect.top + over.rect.height
+            const modifier = isBelowOverItem ? 1 : 0
+            newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1
+            const nextColumns = cloneDeep(prevColumn)
+            const nextActiveColumn = nextColumns.find(column => column._id === activeColumn._id)
+            const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
+            if (nextActiveColumn) {
+                nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+                //cap nhat lai cardorderids
+                nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
+            }
+            if (nextOverColumn) {
+                //ktra card dang keo co ton tai o overcolumn chu neu co thi xoa truoc
+                nextOverColumn.cards = nextOverColumn.cards.filter(card => card._id !== activeDraggingCardId)
+                const rebulidActiveDraggingCard = {
+                    ...activeDraggingCardData,
+                    columnId: nextOverColumn._id
+                }
+                //them card vao over column vi tri moi
+                nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebulidActiveDraggingCard)
+                //cap nhat lai cardorderids
+                nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
+            }
+            return nextColumns
+        })
+    }
     const handleDragStart = (event) => {
         // console.log(event)
         setActiveDragItemId(event?.active?.id)
@@ -77,40 +116,14 @@ function BoardContent({ board }) {
         // console.log(activeColumn)
         // console.log(overColumn)
         if (activeColumn._id !== overCardId._id) {
-            setorderedColumns(prevColumn => {
-                const overCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
-                // console.log(overCardIndex)
-                let newCardIndex
-                const isBelowOverItem = active.rect.current.translated &&
-                    active.rect.current.translated.top > over.rect.top + over.rect.height
-
-                const modifier = isBelowOverItem ? 1 : 0
-                newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1
-                // console.log('newCardIndex', newCardIndex)
-                // console.log('isBelowOverItem', isBelowOverItem)
-                // console.log('modifier', modifier)
-                const nextColumns = cloneDeep(prevColumn)
-                const nextActiveColumn = nextColumns.find(column => column._id === activeColumn._id)
-                // console.log('overColumn', overColumn)
-                // console.log('nextColumns', nextColumns)
-                const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
-                // console.log(nextActiveColumn)
-                // console.log('next over column', nextOverColumn)
-                if (nextActiveColumn) {
-                    nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
-                    //cap nhat lai cardorderids
-                    nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
-                }
-                if (nextOverColumn) {
-                    //ktra card dang keo co ton tai o overcolumn chu neu co thi xoa truoc
-                    nextOverColumn.cards = nextOverColumn.cards.filter(card => card._id !== activeDraggingCardId)
-                    //them card vao over column vi tri moi
-                    nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
-                    //cap nhat lai cardorderids
-                    nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
-                }
-                return nextColumns
-            })
+            moveCardBetWeenDiffColumns(overColumn,
+                overCardId,
+                active,
+                over,
+                activeColumn,
+                activeDraggingCardId,
+                activeDraggingCardData
+            )
         }
     }
     const handleDragEnd = (event) => {
@@ -124,7 +137,14 @@ function BoardContent({ board }) {
             const overColumn = findColumnByCardId(overCardId)
             if (!activeColumn || !overColumn) return
             if (activeColumn._id !== oldColumn._id) {
-                console.log("keo giua 2 column khac nhau")
+                moveCardBetWeenDiffColumns(overColumn,
+                    overCardId,
+                    active,
+                    over,
+                    activeColumn,
+                    activeDraggingCardId,
+                    activeDraggingCardData
+                )
             } else {
                 const oldIndex = oldColumn?.cards?.findIndex(c => c._id === activeDragItemId)
                 const newIndex = overColumn?.cards?.findIndex(c => c._id === overCardId)
@@ -154,7 +174,12 @@ function BoardContent({ board }) {
         setOldColumn(null)
     }
     return (
-        <DndContext sensors={sensor} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+        <DndContext
+            sensors={sensor}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}>
             <Box sx={{
                 width: '100%',
                 height: (theme) => theme.trello.boardContentHeight,
