@@ -26,7 +26,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
     CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
 }
-function BoardContent({ board }) {
+function BoardContent({ board, createNewColumn, createNewCard }) {
     // const pointerSensor = useSensor(PointerSensor, {
     //     activationConstraint: { distance: 10 }
     // })
@@ -50,7 +50,7 @@ function BoardContent({ board }) {
     useEffect(() => {
         const orderedColumns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
         setorderedColumns(orderedColumns)
-    }, [])
+    }, [board])
     const collisionDetectionStrategy = useCallback(() => {
 
     }, [])
@@ -199,7 +199,7 @@ function BoardContent({ board }) {
                     {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
                     {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Cards card={activeDragItemData} />}
                 </DragOverlay>
-                <ListColumns columns={orderedColumns} />
+                <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard} />
             </Box>
         </DndContext>
 

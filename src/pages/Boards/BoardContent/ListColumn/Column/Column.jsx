@@ -21,8 +21,11 @@ import ListCard from './ListCard/ListCard'
 import { mapOrder } from '../../../../../utils/formatters'
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { TextField } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import { toast } from 'react-toastify'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
     const handleClick = (event) => { setAnchorEl(event.currentTarget) }
@@ -41,6 +44,24 @@ function Column({ column }) {
         opacity: isDragging ? 0.5 : 1,
         touchAction: 'none',
         height: '100%'
+    }
+    //
+    const [openNewCardForm, setOpenNewCardForm] = useState(false)
+    const [newCardTitle, setNewCardTitle] = useState('')
+    const toggleOpenNewCard = () => setOpenNewCardForm(!openNewCardForm)
+    const addNewCard = async () => {
+        if (!newCardTitle) {
+            toast.error('column card khong duoc rong')
+            return
+        }
+
+        const newColumnData = {
+            title: newCardTitle,
+            columnId: column._id
+        }
+        await createNewCard(newColumnData)
+        setNewCardTitle('')
+        toggleOpenNewCard()
     }
     return (
         <div
@@ -126,13 +147,84 @@ function Column({ column }) {
                     p: 2,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
                 }}>
-                    <Button startIcon={<AddCardIcon />}>Add new card</Button>
-                    <Tooltip title='drag to move'> <DragHandleIcon sx={{
-                        cursor: 'pointer'
-                    }} />
-                    </Tooltip>
+                    {!openNewCardForm ?
+                        <Box
+                            sx={{
+                                height: '100%',
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}>
+                            <Button startIcon={<AddCardIcon />} onClick={toggleOpenNewCard}>Add new card</Button>
+                            <Tooltip title='drag to move'>
+                                <DragHandleIcon sx={{ cursor: 'pointer' }} />
+                            </Tooltip>
+                        </Box> :
+                        <Box sx={{
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1
+                        }}>
+                            <TextField
+                                id='outlined-search'
+                                label='Enter cards title'
+                                type="text"
+                                size="small"
+                                autoFocus
+                                value={newCardTitle}
+                                onChange={e => setNewCardTitle(e.target.value)}
+                                sx={{
+                                    '& label': { color: 'text.primary' },
+                                    '& input': {
+                                        color: (theme) => theme.palette.primary.main,
+                                        bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : 'white',
+                                    },
+                                    '& label.Mui-focused': { color: (theme) => theme.palette.primary.main, },
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': { color: (theme) => theme.palette.primary.main, },
+                                        '&:hover fieldset': { borderColor: (theme) => theme.palette.primary.main, },
+                                        '&:Mui-focused fieldset': { borderColor: (theme) => theme.palette.primary.main, },
+                                    },
+                                    '& .MuiOutlinedInput-input': {
+                                        borderRadius: 1
+                                    }
+                                }}
+                            />
+                            <Box sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: 1,
+                            }}>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    size="small"
+                                    sx={{
+                                        boxShadow: 'none',
+                                        border: '0.5px solid',
+                                        borderColor: (theme) => theme.palette.success.main,
+                                        '&:hover:': { bgcolor: (theme) => theme.palette.success.main }
+                                    }}
+                                    onClick={addNewCard}
+                                >Add </Button>
+                                <CloseIcon
+                                    fontSize="small"
+                                    sx={{
+                                        color: (theme) => theme.palette.warning.light,
+                                        cursor: 'pointer',
+                                        '&:hover': { color: (theme) => theme.palette.warning.light }
+                                    }}
+                                    onClick={toggleOpenNewCard}
+                                />
+                            </Box>
+                        </Box>}
+                    <Box>
+                    </Box>
                 </Box>
             </Box>
         </div>

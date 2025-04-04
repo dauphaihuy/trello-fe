@@ -5,12 +5,13 @@ import { CssBaseline } from '@mui/material'
 import theme from './theme.js'
 import {
   ThemeProvider
-} from '@mui/material/styles';
+} from '@mui/material/styles'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </StrictMode>,
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <App />
+    <ToastContainer />
+  </ThemeProvider>
 )
