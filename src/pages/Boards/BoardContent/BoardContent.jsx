@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ListColumns from './ListColumn/ListColumns'
-import { mapOrder } from '../../../utils/formatters'
+import { generatePlaceholderCard, mapOrder } from '../../../utils/formatters'
 import {
     DndContext,
     PointerSensor,
@@ -20,7 +20,7 @@ import {
 } from '@dnd-kit/sortable'
 import Column from './ListColumn/Column/Column'
 import Cards from './ListColumn/Column/ListCard/Card/Cards'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -51,6 +51,9 @@ function BoardContent({ board }) {
         const orderedColumns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
         setorderedColumns(orderedColumns)
     }, [])
+    const collisionDetectionStrategy = useCallback(() => {
+
+    }, [])
     const moveCardBetWeenDiffColumns = (overColumn,
         overCardId,
         active,
@@ -71,6 +74,9 @@ function BoardContent({ board }) {
             const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
             if (nextActiveColumn) {
                 nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+                if (isEmpty(nextActiveColumn.cards)) {
+                    nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+                }
                 //cap nhat lai cardorderids
                 nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
             }
@@ -83,6 +89,7 @@ function BoardContent({ board }) {
                 }
                 //them card vao over column vi tri moi
                 nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebulidActiveDraggingCard)
+                nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
                 //cap nhat lai cardorderids
                 nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
             }

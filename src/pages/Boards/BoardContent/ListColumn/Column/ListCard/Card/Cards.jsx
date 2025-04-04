@@ -28,7 +28,7 @@ function Cards({ card }) {
         transition
     }
     const shouldShowCardActions = () => {
-        return !!card?.memberIds.length || !!card?.comments.length || !!card?.attachments.length
+        return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
     }
     return (
         <Card
@@ -38,7 +38,8 @@ function Cards({ card }) {
             sx={{
                 cursor: 'pointer',
                 boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-                overflow: 'unset'
+                overflow: 'unset',
+                height: card?.FE_PlaceholderCard ? '0px' : 'block'
             }}>
             {card?.cover && <CardMedia
                 sx={{ height: 140 }}

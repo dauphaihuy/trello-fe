@@ -24,8 +24,8 @@ function ListColumns({ columns }) {
                 {columns?.map((column, i) => <Column key={i} column={column} />)}
 
                 <Box sx={{
-                    minWidth: '150px',
-                    maxWidth: 200,
+                    minWidth: '170px',
+                    maxWidth: '200px',
                     mx: 2,
                     borderRadius: '6px',
                     height: 'fit-content',
