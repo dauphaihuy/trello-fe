@@ -30,7 +30,7 @@ function Column({ column, createNewCard }) {
     const open = Boolean(anchorEl)
     const handleClick = (event) => { setAnchorEl(event.currentTarget) }
     const handleClose = () => { setAnchorEl(null) }
-    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+    const orderedCards = column?.cards
     const {
         isDragging,
         attributes,
