@@ -24,9 +24,11 @@ import { CSS } from '@dnd-kit/utilities';
 import { TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
+import { useConfirm } from 'material-ui-confirm'
 
-function Column({ column, createNewCard }) {
+function Column({ column, createNewCard, deleteColumnDetail }) {
     const [anchorEl, setAnchorEl] = useState(null)
+    const [isClicked, setIsClicked] = useState(false);
     const open = Boolean(anchorEl)
     const handleClick = (event) => { setAnchorEl(event.currentTarget) }
     const handleClose = () => { setAnchorEl(null) }
@@ -48,7 +50,10 @@ function Column({ column, createNewCard }) {
     //
     const [openNewCardForm, setOpenNewCardForm] = useState(false)
     const [newCardTitle, setNewCardTitle] = useState('')
-    const toggleOpenNewCard = () => setOpenNewCardForm(!openNewCardForm)
+    const toggleOpenNewCard = () => {
+        setOpenNewCardForm(!openNewCardForm)
+        setIsClicked(false)
+    }
     const addNewCard = async () => {
         if (!newCardTitle) {
             toast.error('column card khong duoc rong')
@@ -59,9 +64,19 @@ function Column({ column, createNewCard }) {
             title: newCardTitle,
             columnId: column._id
         }
+        setIsClicked(true)
         await createNewCard(newColumnData)
         setNewCardTitle('')
         toggleOpenNewCard()
+    }
+    const confirmDeleteColumn = useConfirm()
+    const handleDeleteColumn = async () => {
+        const { confirmed, reason } = await confirmDeleteColumn({
+            description: `This will permanently delete ${column.title}.`
+        })
+        if (confirmed) {
+            deleteColumnDetail(column._id)
+        }
     }
     return (
         <div
@@ -111,10 +126,6 @@ function Column({ column, createNewCard }) {
                             }}
                         >
                             <MenuItem>
-                                <ListItemIcon><AddCardIcon fontSize="small" /></ListItemIcon>
-                                <ListItemText>Add new card</ListItemText>
-                            </MenuItem>
-                            <MenuItem>
                                 <ListItemIcon><ContentCut fontSize="small" /></ListItemIcon>
                                 <ListItemText>Cut</ListItemText>
                             </MenuItem>
@@ -127,8 +138,15 @@ function Column({ column, createNewCard }) {
                                 <ListItemText>Paste</ListItemText>
                             </MenuItem>
                             <Divider />
-                            <MenuItem>
-                                <ListItemIcon><DeleteOutlineIcon fontSize="small" /></ListItemIcon>
+                            <MenuItem onClick={handleDeleteColumn} sx={{
+                                '&:hover': {
+                                    color: 'warning.dark',
+                                    '& .delete-forever-icon': {
+                                        color: 'warning.dark'
+                                    }
+                                }
+                            }}>
+                                <ListItemIcon><DeleteOutlineIcon className='delete-forever-icon' fontSize="small" /></ListItemIcon>
                                 <ListItemText>Remove this column</ListItemText>
                             </MenuItem>
                             <MenuItem>
@@ -204,6 +222,7 @@ function Column({ column, createNewCard }) {
                                     variant="contained"
                                     color="success"
                                     size="small"
+                                    disabled={isClicked}
                                     sx={{
                                         boxShadow: 'none',
                                         border: '0.5px solid',

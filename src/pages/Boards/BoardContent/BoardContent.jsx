@@ -32,7 +32,9 @@ function BoardContent({
     createNewCard,
     moveColumn,
     moveCardToDiffColumn,
-    moveCardInSameColumn }) {
+    moveCardInSameColumn,
+    deleteColumnDetail,
+}) {
     // const pointerSensor = useSensor(PointerSensor, {
     //     activationConstraint: { distance: 10 }
     // })
@@ -221,7 +223,12 @@ function BoardContent({
                     {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
                     {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Cards card={activeDragItemData} />}
                 </DragOverlay>
-                <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard} />
+                <ListColumns
+                    columns={orderedColumns}
+                    createNewColumn={createNewColumn}
+                    createNewCard={createNewCard}
+                    deleteColumnDetail={deleteColumnDetail}
+                />
             </Box>
         </DndContext>
 

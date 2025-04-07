@@ -10,12 +10,14 @@ import {
     fetchBoardDetailsAPI,
     updateBoardDetailsAPI,
     moveCardToDiffColumnAPI,
-    updateColumnDetailsAPI
+    updateColumnDetailsAPI,
+    deleteColumnAPI
 } from '../../apis'
 import { isEmpty } from 'lodash'
 import { generatePlaceholderCard, mapOrder } from '../../utils/formatters'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
+import { toast } from 'react-toastify'
 
 function Board() {
     const [board, setBoard] = useState(null)
@@ -55,9 +57,15 @@ function Board() {
         })
         const newBoard = { ...board }
         const columnToUpdate = newBoard.columns.find(c => c._id === createdCard.columnId)
+        console.log("🚀 ~ createNewCard ~ columnToUpdate:", columnToUpdate)
         if (columnToUpdate) {
-            columnToUpdate.cards.push(createdCard)
-            columnToUpdate.cardOrderIds.push(createdCard._id)//vid69
+            if (columnToUpdate.cards.some(c => c.FE_PlaceholderCard)) {
+                columnToUpdate.cards = [createdCard]
+                columnToUpdate.cardOrderIds = [createdCard._id]
+            } else {
+                columnToUpdate.cards.push(createdCard)
+                columnToUpdate.cardOrderIds.push(createdCard._id)//vid69
+            }
         }
         setBoard(newBoard)
     }
@@ -88,12 +96,15 @@ function Board() {
         newBoard.columns = dndOrderedColumns
         newBoard.columnOrderIds = dndOrderedIds
         setBoard(newBoard)
+        let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+        console.log(prevCardOrderIds)
+        if (prevCardOrderIds[0].includes('-placeholder-card')) prevCardOrderIds = []
         //call api
         moveCardToDiffColumnAPI(
             {
                 currentCardId,
                 prevColumnId,
-                prevCardOrderIds: dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+                prevCardOrderIds,
                 nextColumnIds,
                 nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnIds)?.cardOrderIds,
             }
@@ -110,6 +121,16 @@ function Board() {
             <CircularProgress />
         </Box>
     }
+    const deleteColumnDetail = (columnId) => {
+        console.log(columnId)
+        const newBoard = { ...board }
+        newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
+        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+        setBoard(newBoard)
+        deleteColumnAPI(columnId).then(res => {
+            toast.success(res?.deleteResult)
+        })
+    }
     return (
         <Container disableGutters maxWidth={false} sx={{
             height: '100vh',
@@ -125,6 +146,7 @@ function Board() {
                 moveColumn={moveColumn}
                 moveCardInSameColumn={moveCardInSameColumn}
                 moveCardToDiffColumn={moveCardToDiffColumn}
+                deleteColumnDetail={deleteColumnDetail}
                 createNewCard={createNewCard} />
         </Container>
     )

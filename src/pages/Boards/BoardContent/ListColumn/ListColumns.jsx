@@ -7,7 +7,7 @@ import { horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortabl
 import CloseIcon from '@mui/icons-material/Close'
 import { addNewColumnAPI } from '../../../../apis'
 import { toast } from 'react-toastify'
-function ListColumns({ columns, createNewColumn, createNewCard }) {
+function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetail }) {
     const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
     const [newColTitle, setNewColTitle] = useState('')
     const toggleOpenNewColumn = () => setOpenNewColumnForm(!openNewColumnForm)
@@ -40,7 +40,12 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
 
             }}>
                 {/*box column */}
-                {columns?.map((column, i) => <Column key={i} column={column} createNewCard={createNewCard} />)}
+                {columns?.map((column, i) => <Column
+                    key={i}
+                    column={column}
+                    createNewCard={createNewCard}
+                    deleteColumnDetail={deleteColumnDetail}
+                />)}
                 {
                     openNewColumnForm ? <Box sx={{
                         minWidth: '250px',
