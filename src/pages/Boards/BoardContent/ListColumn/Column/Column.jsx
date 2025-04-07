@@ -18,17 +18,22 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCard from './ListCard/ListCard'
-import { mapOrder } from '../../../../../utils/formatters'
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
+import { cloneDeep } from 'lodash'
+import { addNewCardAPI, deleteColumnAPI } from '../../../../../apis'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '../../../../../redux/activeBoard/activeBoardSlice'
 
-function Column({ column, createNewCard, deleteColumnDetail }) {
+function Column({ column }) {
+    const board = useSelector(selectCurrentActiveBoard)
+    const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null)
-    const [isClicked, setIsClicked] = useState(false);
+    const [isClicked, setIsClicked] = useState(false)
     const open = Boolean(anchorEl)
     const handleClick = (event) => { setAnchorEl(event.currentTarget) }
     const handleClose = () => { setAnchorEl(null) }
@@ -39,7 +44,6 @@ function Column({ column, createNewCard, deleteColumnDetail }) {
         listeners,
         setNodeRef,
         transform,
-        transition,
     } = useSortable({ id: column?._id, data: { ...column } })
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -60,22 +64,46 @@ function Column({ column, createNewCard, deleteColumnDetail }) {
             return
         }
 
-        const newColumnData = {
+        const newCardData = {
             title: newCardTitle,
             columnId: column._id
         }
         setIsClicked(true)
-        await createNewCard(newColumnData)
+        const createdCard = await addNewCardAPI({
+            ...newCardData,
+            boardId: board._id
+        })
+        // const newBoard = cloneDeep(board)
+        const newBoard = cloneDeep(board)
+        const columnToUpdate = newBoard.columns.find(c => c._id === createdCard.columnId)
+        if (columnToUpdate) {
+            if (columnToUpdate.cards.some(c => c.FE_PlaceholderCard)) {
+                columnToUpdate.cards = [createdCard]
+                columnToUpdate.cardOrderIds = [createdCard._id]
+            } else {
+                columnToUpdate.cards.push(createdCard)
+                columnToUpdate.cardOrderIds.push(createdCard._id)//vid69
+            }
+        }
+        dispatch(updateCurrentActiveBoard(newBoard))
+        // await createNewCard(newColumnData)
         setNewCardTitle('')
         toggleOpenNewCard()
     }
     const confirmDeleteColumn = useConfirm()
     const handleDeleteColumn = async () => {
-        const { confirmed, reason } = await confirmDeleteColumn({
+        const { confirmed } = await confirmDeleteColumn({
             description: `This will permanently delete ${column.title}.`
         })
         if (confirmed) {
-            deleteColumnDetail(column._id)
+            const newBoard = cloneDeep(board)
+            newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
+            newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
+            dispatch(updateCurrentActiveBoard(newBoard))
+            deleteColumnAPI(column._id).then(res => {
+                toast.success(res?.deleteResult)
+            })
+            // deleteColumnDetail(column._id)
         }
     }
     return (

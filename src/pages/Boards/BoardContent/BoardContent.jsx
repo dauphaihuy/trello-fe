@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ListColumns from './ListColumn/ListColumns'
-import { generatePlaceholderCard, mapOrder } from '../../../utils/formatters'
+import { generatePlaceholderCard } from '../../../utils/formatters'
 import {
     DndContext,
     PointerSensor,
@@ -28,12 +28,9 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 }
 function BoardContent({
     board,
-    createNewColumn,
-    createNewCard,
     moveColumn,
     moveCardToDiffColumn,
     moveCardInSameColumn,
-    deleteColumnDetail,
 }) {
     // const pointerSensor = useSensor(PointerSensor, {
     //     activationConstraint: { distance: 10 }
@@ -58,9 +55,6 @@ function BoardContent({
     useEffect(() => {
         setorderedColumns(board?.columns)
     }, [board])
-    const collisionDetectionStrategy = useCallback(() => {
-
-    }, [])
     const moveCardBetWeenDiffColumns = (overColumn,
         overCardId,
         active,
@@ -225,9 +219,6 @@ function BoardContent({
                 </DragOverlay>
                 <ListColumns
                     columns={orderedColumns}
-                    createNewColumn={createNewColumn}
-                    createNewCard={createNewCard}
-                    deleteColumnDetail={deleteColumnDetail}
                 />
             </Box>
         </DndContext>

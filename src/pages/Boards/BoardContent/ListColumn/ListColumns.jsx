@@ -5,14 +5,19 @@ import { Button, TextField } from '@mui/material'
 import AddchartIcon from '@mui/icons-material/Addchart'
 import { horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
-import { addNewColumnAPI } from '../../../../apis'
 import { toast } from 'react-toastify'
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetail }) {
+import { generatePlaceholderCard } from '../../../../utils/formatters'
+import { cloneDeep } from 'lodash'
+import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '../../../../redux/activeBoard/activeBoardSlice'
+import { addNewColumnAPI } from '../../../../apis'
+import { useDispatch, useSelector } from 'react-redux'
+function ListColumns({ columns }) {
+    const dispatch = useDispatch()
+    const board = useSelector(selectCurrentActiveBoard)
     const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
     const [newColTitle, setNewColTitle] = useState('')
     const toggleOpenNewColumn = () => setOpenNewColumnForm(!openNewColumnForm)
     const addNewCol = async () => {
-        console.log(newColTitle)
         if (!newColTitle) {
             toast.error('column title khong duoc rong')
             return
@@ -21,7 +26,17 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
         const newColumnData = {
             title: newColTitle
         }
-        await createNewColumn(newColumnData)
+        const createdColumn = await addNewColumnAPI({
+            ...newColumnData,
+            boardId: board._id
+        })
+        createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+        createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+        const newBoard = cloneDeep(board)
+        newBoard.columns.push(createdColumn)
+        newBoard.columnOrderIds.push(createdColumn._id)
+        dispatch(updateCurrentActiveBoard(newBoard))
         toggleOpenNewColumn()
         setNewColTitle('')
     }
@@ -43,8 +58,6 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
                 {columns?.map((column, i) => <Column
                     key={i}
                     column={column}
-                    createNewCard={createNewCard}
-                    deleteColumnDetail={deleteColumnDetail}
                 />)}
                 {
                     openNewColumnForm ? <Box sx={{
@@ -76,7 +89,7 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldSet': { borderColor: 'white' },
                                     '&.Mui-focused fieldset': { borderColor: 'white' }
-                                },
+                                }
                             }}
                         />
                         <Box sx={{

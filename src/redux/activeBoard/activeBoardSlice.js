@@ -44,7 +44,7 @@ export const activeBoardSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = activeBoardSlice.actions
+export const { updateCurrentActiveBoard } = activeBoardSlice.actions
 //selector
 export const selectCurrentActiveBoard = (state) => {
     return state.activeBoard.currrentActiveBoard
