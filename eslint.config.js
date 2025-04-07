@@ -45,7 +45,7 @@ export default [
       'no-multiple-empty-lines': 1,
       'space-before-blocks': ['error', 'always'],
       'object-curly-spacing': [1, 'always'],
-      'indent': 'tab',
+      'indent': 'off',
       'semi': [1, 'never'],
       'quotes': ['error', 'single'],
       'array-bracket-spacing': 1,

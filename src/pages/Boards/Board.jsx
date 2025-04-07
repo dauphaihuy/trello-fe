@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import AppBar from '../../components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import { mockData } from '../../apis/mock-data'
 import {
     addNewCardAPI,
     addNewColumnAPI,
@@ -18,9 +17,10 @@ import { generatePlaceholderCard, mapOrder } from '../../utils/formatters'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { toast } from 'react-toastify'
-
+import { useDispatch, useSelector } from 'react-redux'
 function Board() {
     const [board, setBoard] = useState(null)
+    const dispatch = useDispatch()
     useEffect(() => {
         const boarId = '67ef3aa62ffd2d6cd9c6fca8'
         fetchBoardDetailsAPI(boarId).then(board => {
@@ -57,7 +57,6 @@ function Board() {
         })
         const newBoard = { ...board }
         const columnToUpdate = newBoard.columns.find(c => c._id === createdCard.columnId)
-        console.log("🚀 ~ createNewCard ~ columnToUpdate:", columnToUpdate)
         if (columnToUpdate) {
             if (columnToUpdate.cards.some(c => c.FE_PlaceholderCard)) {
                 columnToUpdate.cards = [createdCard]
@@ -106,7 +105,7 @@ function Board() {
                 prevColumnId,
                 prevCardOrderIds,
                 nextColumnIds,
-                nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnIds)?.cardOrderIds,
+                nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnIds)?.cardOrderIds
             }
         )
     }
@@ -122,7 +121,6 @@ function Board() {
         </Box>
     }
     const deleteColumnDetail = (columnId) => {
-        console.log(columnId)
         const newBoard = { ...board }
         newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
         newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
