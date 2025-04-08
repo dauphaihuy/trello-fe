@@ -17,14 +17,18 @@ import {
     updateCurrentActiveBoard
 } from '../../redux/activeBoard/activeBoardSlice'
 import { cloneDeep } from 'lodash'
+import { useParams } from 'react-router-dom'
 function Board() {
 
     const dispatch = useDispatch()
     const board = useSelector(selectCurrentActiveBoard)
+
+    const { boardId } = useParams()
+    console.log(boardId)
     useEffect(() => {
-        const boarId = '67ef3aa62ffd2d6cd9c6fca8'
-        dispatch(fetchBoardDetailsAPI(boarId))
-    }, [dispatch])
+        // const boarId = '67ef3aa62ffd2d6cd9c6fca8'
+        dispatch(fetchBoardDetailsAPI(boardId))
+    }, [dispatch, boardId])
 
     //keo column
     const moveColumn = (dndOrderedColumns) => {

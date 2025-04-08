@@ -8,8 +8,8 @@ import Button from '@mui/material/Button'
 import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 function Cards({ card }) {
     const {
         isDragging,
@@ -17,15 +17,14 @@ function Cards({ card }) {
         listeners,
         setNodeRef,
         transform,
-        transition,
+        transition
     } = useSortable({ id: card?._id, data: { ...card } })
     const style = {
         transform: CSS.Translate.toString(transform),
         opacity: isDragging ? 0.5 : 1,
         touchAction: 'none',
         transition,
-        border: isDragging ? '1px solid #030303' : '',
-        transition
+        border: isDragging ? '1px solid #030303' : ''
     }
     const shouldShowCardActions = () => {
         return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length

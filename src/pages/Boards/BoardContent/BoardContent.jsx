@@ -16,7 +16,7 @@ import {
 
 } from '@dnd-kit/core'
 import {
-    arrayMove,
+    arrayMove
 } from '@dnd-kit/sortable'
 import Column from './ListColumn/Column/Column'
 import Cards from './ListColumn/Column/ListCard/Card/Cards'
@@ -24,13 +24,13 @@ import { cloneDeep, isEmpty } from 'lodash'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
-    CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
+    CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 function BoardContent({
     board,
     moveColumn,
     moveCardToDiffColumn,
-    moveCardInSameColumn,
+    moveCardInSameColumn
 }) {
     // const pointerSensor = useSensor(PointerSensor, {
     //     activationConstraint: { distance: 10 }

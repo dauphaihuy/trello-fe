@@ -17,15 +17,15 @@ export default [
     },
     plugins: {
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      'react-refresh': reactRefresh
     },
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        { allowConstantExport: true }
       ],
       'no-restricted-imports': [
         'error',
@@ -54,7 +54,7 @@ export default [
       'keyword-spacing': 1,
       'comma-dangle': 1,
       'comma-spacing': 1,
-      'arrow-spacing': 1,
-    },
-  },
+      'arrow-spacing': 1
+    }
+  }
 ]

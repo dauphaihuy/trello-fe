@@ -43,7 +43,7 @@ function Column({ column }) {
         attributes,
         listeners,
         setNodeRef,
-        transform,
+        transform
     } = useSortable({ id: column?._id, data: { ...column } })
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -150,7 +150,7 @@ function Column({ column }) {
                             open={open}
                             onClose={handleClose}
                             MenuListProps={{
-                                'aria-labelledby': 'basic-button-dropdown',
+                                'aria-labelledby': 'basic-button-dropdown'
                             }}
                         >
                             <MenuItem>
@@ -193,7 +193,7 @@ function Column({ column }) {
                     p: 2,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-between'
                 }}>
                     {!openNewCardForm ?
                         <Box
@@ -227,13 +227,13 @@ function Column({ column }) {
                                     '& label': { color: 'text.primary' },
                                     '& input': {
                                         color: (theme) => theme.palette.primary.main,
-                                        bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : 'white',
+                                        bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : 'white'
                                     },
-                                    '& label.Mui-focused': { color: (theme) => theme.palette.primary.main, },
+                                    '& label.Mui-focused': { color: (theme) => theme.palette.primary.main },
                                     '& .MuiOutlinedInput-root': {
-                                        '& fieldset': { color: (theme) => theme.palette.primary.main, },
-                                        '&:hover fieldset': { borderColor: (theme) => theme.palette.primary.main, },
-                                        '&:Mui-focused fieldset': { borderColor: (theme) => theme.palette.primary.main, },
+                                        '& fieldset': { color: (theme) => theme.palette.primary.main },
+                                        '&:hover fieldset': { borderColor: (theme) => theme.palette.primary.main },
+                                        '&:Mui-focused fieldset': { borderColor: (theme) => theme.palette.primary.main }
                                     },
                                     '& .MuiOutlinedInput-input': {
                                         borderRadius: 1
@@ -244,7 +244,7 @@ function Column({ column }) {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
-                                gap: 1,
+                                gap: 1
                             }}>
                                 <Button
                                     variant="contained"
