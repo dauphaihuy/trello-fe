@@ -18,6 +18,7 @@ import {
 } from '../../redux/activeBoard/activeBoardSlice'
 import { cloneDeep } from 'lodash'
 import { useParams } from 'react-router-dom'
+import Loading from '../../components/Loading/Loading'
 function Board() {
 
     const dispatch = useDispatch()
@@ -70,15 +71,7 @@ function Board() {
         )
     }
     if (!board) {
-        return <Box sx={{
-            display: 'flex',
-            width: '100vh',
-            height: '100vh',
-            alignItems: 'center',
-            justifyContent: 'center'
-        }}>
-            <CircularProgress />
-        </Box>
+        return <Loading caption={'Loading board...'} />
     }
     return (
         <Container disableGutters maxWidth={false} sx={{

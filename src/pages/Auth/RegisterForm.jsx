@@ -1,15 +1,18 @@
 import { Alert, Avatar, Box, Button, Card, CardActions, TextField, Typography, Zoom } from '@mui/material'
 import React from 'react'
 import LockIcon from '@mui/icons-material/Lock'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
-    EMAIL_MESSAGE,
+    EMAIL_RULE_MESSAGE,
     EMAIL_RULE,
     FIELD_REQUIRED_MESSAGE,
-    PASSWORD_MESSAGE, PASSWORD_RULE
+    PASSWORD_RULE_MESSAGE,
+    PASSWORD_RULE
 } from '../../utils/validator'
 import FieldErrorAlert from '../../components/Form/FieldErrorAlert'
+import { registerUserAPI } from '../../apis'
+import { toast } from 'react-toastify'
 function RegisterForm() {
     const {
         register,
@@ -17,10 +20,16 @@ function RegisterForm() {
         formState: { errors },
         watch
     } = useForm()
+    const navigate = useNavigate()
     const submitRegister = (data) => {
-        console.log(data)
+        const { email, password } = data
+        toast.promise(registerUserAPI({ email, password }),
+            { pending: 'Registration is in progress...' })
+            .then(user => {
+                navigate(`/login?registeredEmail=${user.email}`)
+            })
+
     }
-    console.log(errors)
     return (
         <form onSubmit={handleSubmit(submitRegister)}>
             <Zoom in={true} style={{ transitionDelay: '200ms' }}>
@@ -42,7 +51,7 @@ function RegisterForm() {
                         }}>
                         Login Form
                     </Box>
-                    <Alert severity='success' sx={{
+                    {/* <Alert severity='success' sx={{
                         'MuiAleart-message': { overflow: 'hidden' }
                     }}>
                         Your email has been verified
@@ -51,7 +60,7 @@ function RegisterForm() {
                         'MuiAleart-message': { overflow: 'hidden' }
                     }}>
                         An email has been sent to your email
-                    </Alert>
+                    </Alert> */}
                     <Box sx={{ padding: '0 1em 1em 1em' }}>
                         <Box sx={{ marginTop: '1em' }}>
                             <TextField
@@ -59,7 +68,7 @@ function RegisterForm() {
                                     required: FIELD_REQUIRED_MESSAGE,
                                     pattern: {
                                         value: EMAIL_RULE,
-                                        message: EMAIL_MESSAGE
+                                        message: EMAIL_RULE_MESSAGE
                                     }
 
                                 })}
@@ -76,7 +85,7 @@ function RegisterForm() {
                                     required: FIELD_REQUIRED_MESSAGE,
                                     pattern: {
                                         value: PASSWORD_RULE,
-                                        message: PASSWORD_MESSAGE
+                                        message: PASSWORD_RULE_MESSAGE
                                     }
 
                                 })}

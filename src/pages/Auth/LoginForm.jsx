@@ -1,7 +1,7 @@
 import React from 'react'
 import { Alert, Avatar, Box, Button, Card, CardActions, TextField, Typography, Zoom } from '@mui/material'
 import LockIcon from '@mui/icons-material/Lock'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
     EMAIL_RULE_MESSAGE,
@@ -10,15 +10,30 @@ import {
     PASSWORD_RULE_MESSAGE, PASSWORD_RULE
 } from '../../utils/validator'
 import FieldErrorAlert from '../../components/Form/FieldErrorAlert'
+import { useDispatch } from 'react-redux'
+import { loginUserAPI } from '../../redux/user/UserSlice'
+import { toast } from 'react-toastify'
 function LoginForm() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
-        watch
+        formState: { errors }
     } = useForm()
+    let [searchParams] = useSearchParams()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const registeredEmail = searchParams.get('registeredEmail')
+    const verifiedEmail = searchParams.get('verifiedEmail')
     const submitLogin = (data) => {
-        console.log(data)
+        const { email, password } = data
+        console.log(email, password)
+        toast.promise(dispatch(loginUserAPI({ email, password })),
+            { pending: 'logging in...' }
+        ).then(res => {
+            if (!res.error) navigate('/')
+        })
+
+
     }
     return (
         <form onSubmit={handleSubmit(submitLogin)}>
@@ -48,6 +63,23 @@ function LoginForm() {
                         flexDirection: 'column',
                         padding: '0 1em'
                     }}>
+                        {verifiedEmail && <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>
+                                {verifiedEmail}
+                            </Typography>
+                            <Typography>
+                                Now you can login to enjoy our services!
+                            </Typography>
+                        </Alert>}
+
+                        {registeredEmail && < Alert severity="error" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>
+                                An email has been sent to {registeredEmail}&nbsp;
+                            </Typography>
+                            <Typography>
+                                Please verify your account before logging in!
+                            </Typography>
+                        </Alert>}
                     </Box>
                     <Box sx={{ padding: '0 1em 1em 1em' }}>
                         <Box sx={{ marginTop: '1em' }}>
@@ -107,8 +139,8 @@ function LoginForm() {
                         </Box>
                     </Box>
                 </Card>
-            </Zoom>
-        </form>
+            </Zoom >
+        </form >
     )
 }
 
