@@ -4,10 +4,10 @@ import LockIcon from '@mui/icons-material/Lock'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
-    EMAIL_MESSAGE,
+    EMAIL_RULE_MESSAGE,
     EMAIL_RULE,
     FIELD_REQUIRED_MESSAGE,
-    PASSWORD_MESSAGE, PASSWORD_RULE
+    PASSWORD_RULE_MESSAGE, PASSWORD_RULE
 } from '../../utils/validator'
 import FieldErrorAlert from '../../components/Form/FieldErrorAlert'
 function LoginForm() {
@@ -56,7 +56,7 @@ function LoginForm() {
                                     required: FIELD_REQUIRED_MESSAGE,
                                     pattern: {
                                         value: EMAIL_RULE,
-                                        message: EMAIL_MESSAGE
+                                        message: EMAIL_RULE_MESSAGE
                                     }
 
                                 })}
@@ -73,7 +73,7 @@ function LoginForm() {
                                     required: FIELD_REQUIRED_MESSAGE,
                                     pattern: {
                                         value: PASSWORD_RULE,
-                                        message: PASSWORD_MESSAGE
+                                        message: PASSWORD_RULE_MESSAGE
                                     }
 
                                 })}
@@ -86,7 +86,9 @@ function LoginForm() {
                         <CardActions
                             sx={{ padding: '0 1em 1em 1em', marginTop: '1em' }}
                         >
-                            <Button type='submit'
+                            <Button
+                                className='interceptor-loading'
+                                type='submit'
                                 variant='outlined'
                                 color='primary.main'
                                 size='large'

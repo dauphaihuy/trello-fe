@@ -20,3 +20,16 @@ export const generatePlaceholderCard = (column) => {
         FE_PlaceholderCard: true
     }
 }
+export const interceptorLoadingElements = (calling) => {
+    const elements = document.querySelectorAll('.interceptor-loading')
+    for (let i = 0; i < elements.length; i++) {
+        if (calling) {
+            // Đang chờ gian cho gọi API (calling == true) thì sẽ làm mờ phần tử khi click button
+            elements[i].style.opacity = '0.5'
+            elements[i].style.pointerEvents = 'none'
+        } else {
+            elements[i].style.opacity = 'initial'
+            elements[i].style.pointerEvents = 'initial'
+        }
+    }
+}

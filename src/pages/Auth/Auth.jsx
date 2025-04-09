@@ -8,7 +8,7 @@ function Auth() {
     const location = useLocation()
     const isLogin = location.pathname === '/login'
     const isRegister = location.pathname === '/register'
-    console.log('location', location.pathname)
+    // console.log('location', location.pathname)
     return (
         <Box sx={{
             display: 'flex',

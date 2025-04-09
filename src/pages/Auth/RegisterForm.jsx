@@ -104,7 +104,9 @@ function RegisterForm() {
                         <CardActions
                             sx={{ padding: '0 1em 1em 1em', marginTop: '1em' }}
                         >
-                            <Button type='submit'
+                            <Button
+                                className='interceptor-loading'
+                                type='submit'
                                 variant='outlined'
                                 color='primary.main'
                                 size='large'

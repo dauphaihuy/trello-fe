@@ -33,7 +33,6 @@ function Column({ column }) {
     const board = useSelector(selectCurrentActiveBoard)
     const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null)
-    const [isClicked, setIsClicked] = useState(false)
     const open = Boolean(anchorEl)
     const handleClick = (event) => { setAnchorEl(event.currentTarget) }
     const handleClose = () => { setAnchorEl(null) }
@@ -56,7 +55,6 @@ function Column({ column }) {
     const [newCardTitle, setNewCardTitle] = useState('')
     const toggleOpenNewCard = () => {
         setOpenNewCardForm(!openNewCardForm)
-        setIsClicked(false)
     }
     const addNewCard = async () => {
         if (!newCardTitle) {
@@ -68,7 +66,6 @@ function Column({ column }) {
             title: newCardTitle,
             columnId: column._id
         }
-        setIsClicked(true)
         const createdCard = await addNewCardAPI({
             ...newCardData,
             boardId: board._id
@@ -247,10 +244,10 @@ function Column({ column }) {
                                 gap: 1
                             }}>
                                 <Button
+                                    className='interceptor-loading'
                                     variant="contained"
                                     color="success"
                                     size="small"
-                                    disabled={isClicked}
                                     sx={{
                                         boxShadow: 'none',
                                         border: '0.5px solid',

@@ -97,7 +97,7 @@ function ListColumns({ columns }) {
                             alignItems: 'center',
                             gap: 1
                         }}>
-                            <Button variant="contained"
+                            <Button className='interceptor-loading' variant="contained"
                                 color="success" size="small"
                                 sx={{
                                     boxShadow: 'none',
