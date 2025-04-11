@@ -2,13 +2,18 @@ import React, { useState } from 'react'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
+import Avatar from '@mui/material/Avatar'
+import Menu from '@mui/material/Menu'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import Settings from '@mui/icons-material/Settings'
+import Logout from '@mui/icons-material/Logout'
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutUserAPI, selectCurrentUser } from '../../../redux/user/UserSlice'
+import { useConfirm } from 'material-ui-confirm'
+import { toast } from 'react-toastify'
+
 function Profiles() {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
@@ -17,6 +22,19 @@ function Profiles() {
     }
     const handleClose = () => {
         setAnchorEl(null)
+    }
+    const dispatch = useDispatch()
+    const currentUser = useSelector(selectCurrentUser)
+    const confirmLogout = useConfirm()
+    const handleLogout = async () => {
+        const { confirmed } = await confirmLogout({
+            title: 'Log out of your account?',
+            confirmationText: 'Confirm',
+            cancellationText: 'Cancel'
+        })
+        if (confirmed) {
+            dispatch(logoutUserAPI())
+        }
     }
     return (
         <>
@@ -30,7 +48,7 @@ function Profiles() {
                     aria-expanded={open ? 'true' : undefined}
                 >
                     <Avatar sx={{ width: 36, height: 36 }}
-                        src='https://scontent.fdad1-2.fna.fbcdn.net/v/t39.30808-6/465719988_1367877930859315_3999686439919652499_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=6d9BAdeIgYgQ7kNvgGmVT4X&_nc_oc=AdniJorKGfwbHIkFZf0VLyheQhZHgyRsPxlOut9HFbDI5U2qY0gyun2c7bC1kRxRDnI&_nc_zt=23&_nc_ht=scontent.fdad1-2.fna&_nc_gid=rSwy0wsfah6KHw_jHhCNZg&oh=00_AYHk3FIZv6VCS9o8qq3HpcaDgFW77m-hNqx_JFmkL5h0HA&oe=67F0F34F'></Avatar>
+                        src={currentUser?.avatar}></Avatar>
                 </IconButton>
             </Tooltip>
             <Menu
@@ -42,28 +60,36 @@ function Profiles() {
                     'aria-labelledby': 'basic-button-recent'
                 }}
             >
-                <MenuItem onClick={handleClose}>
-                    <Avatar /> Profile
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Avatar /> My account
+                <MenuItem sx={{
+                    '&:hover': { color: 'success.light' }
+
+                }}>
+                    <Avatar sx={{ mr: 2 }} src={currentUser?.avatar} /> Profile
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>
+                <MenuItem >
                     <ListItemIcon>
                         <PersonAddIcon fontSize="small" />
                     </ListItemIcon>
                     Add another account
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem >
                     <ListItemIcon>
                         <Settings fontSize="small" />
                     </ListItemIcon>
                     Settings
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem
+                    onClick={handleLogout}
+                    sx={{
+                        '&:hover': {
+                            color: 'warning.dark',
+                            '& .logout-icon': { color: 'warning.dark' }
+                        }
+
+                    }}>
                     <ListItemIcon>
-                        <Logout fontSize="small" />
+                        <Logout className='logout-icon' fontSize="small" />
                     </ListItemIcon>
                     Logout
                 </MenuItem>

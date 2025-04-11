@@ -26,7 +26,7 @@ function LoginForm() {
     const verifiedEmail = searchParams.get('verifiedEmail')
     const submitLogin = (data) => {
         const { email, password } = data
-        console.log(email, password)
+        // console.log(email, password)
         toast.promise(dispatch(loginUserAPI({ email, password })),
             { pending: 'logging in...' }
         ).then(res => {
@@ -72,7 +72,7 @@ function LoginForm() {
                             </Typography>
                         </Alert>}
 
-                        {registeredEmail && < Alert severity="error" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+                        {registeredEmail && < Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>
                                 An email has been sent to {registeredEmail}&nbsp;
                             </Typography>

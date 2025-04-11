@@ -12,10 +12,13 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Provider } from 'react-redux'
 import { store } from './redux/store.js'
 import { BrowserRouter } from 'react-router-dom'
+//cau hinh redux-persist
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 const persistor = persistStore(store)
-
+//kỹ thuật injectstore
+import { injectStore } from './utils/authorizeAxios.js'
+injectStore(store)
 createRoot(document.getElementById('root')).render(
   <BrowserRouter basename='/' >
     <Provider store={store}>
