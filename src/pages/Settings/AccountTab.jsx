@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MailIcon from '@mui/icons-material/Mail';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import { FIELD_REQUIRED_MESSAGE } from '../../utils/validator'
+import { FIELD_REQUIRED_MESSAGE, singleFileValidator } from '../../utils/validator'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import FieldErrorAlert from '../../components/Form/FieldErrorAlert'
 import { toast } from 'react-toastify'
@@ -25,6 +25,7 @@ const VisualHiddenInput = styled('input')({
 function AccountTab() {
     const dispatch = useDispatch()
     const currentUser = useSelector(selectCurrentUser)
+    console.log(currentUser)
     // Thông tin của user để init vào form (key tương ứng với register phía dưới Field)
     const initialGeneralForm = {
         displayName: currentUser?.displayName
@@ -39,30 +40,32 @@ function AccountTab() {
         // Nếu không có sự thay đổi gì về displayName thì không làm gì cả
         if (displayName === currentUser.displayName) return
         // Gọi API...
-        toast.promise(
-            dispatch(updateUserAPI({ displayName })),
-            { pending: 'updating' }
-        ).then(res => {
-            if (!res.error) {
-                toast.success('User updated successfully')
-            }
-        }).catch(() => { })
+
     }
     const uploadAvatar = (e) => {
         console.log('e.target.files[0]', e.target?.files[0])
-        // const error = singleFileValidator(e.target?.files[0])
-        // if (error) {
-        //     toast.error(error)
-        //     return
-        // }
+        const error = singleFileValidator(e.target?.files[0])
+        if (error) {
+            toast.error(error)
+            return
+        }
 
         // Sử dụng FormData để xử lý dữ liệu liên quan tới file khi gọi API
         let reqData = new FormData()
         reqData.append('avatar', e.target?.files[0]) // Cách để lấy được dữ liệu từ FormData
         console.log(reqData)
-        for (const value of reqData.values()) {
-            console.log('reqData value:', value)
-        }
+        // for (const value of reqData.values()) {
+        //     console.log('reqData value:', value)
+        // }
+        toast.promise(
+            dispatch(updateUserAPI(reqData)),
+            { pending: 'updating' }
+        ).then(res => {
+            if (!res.error) {
+                toast.success('User updated successfully')
+            }
+            e.target.value = ''
+        })
     }
     return (
         <Box sx={{

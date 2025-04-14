@@ -16,7 +16,6 @@ const ProtectedRoute = ({ user }) => {
 }
 function App() {
   const currentUser = useSelector(selectCurrentUser)
-  console.log(currentUser)
   return (
     <Routes>
       <Route path='/' element={
