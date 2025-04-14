@@ -42,6 +42,7 @@ authorizeAxiosInstance.interceptors.response.use(function (response) {
 
     return response
 }, function (error) {
+    console.log(error)
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     // mã lỗi ngoài 200 sẽ rơi vào đây
@@ -52,7 +53,6 @@ authorizeAxiosInstance.interceptors.response.use(function (response) {
 
     // Trường hợp 1: Nếu nhận mã 401 từ BE, thì gọi api refresh_token luôn
     if (error.response?.status === 401) {
-        console.log('goi log out')
         axiosReduxStore.dispatch(logoutUserAPI(false))
     }
 
@@ -62,6 +62,7 @@ authorizeAxiosInstance.interceptors.response.use(function (response) {
     const originalRequests = error.config
     // console.log('originalRequests', originalRequests)
     if (error.response?.status === 410 && !originalRequests._retry) {
+
         // Gán thêm một giá trị retry luôn = true trong khoảng thời gian cho
         // đảm bảo việc refresh token này chỉ luôn gọi 1 lần tại 1 thời điểm (như vậy điều kiện if ngay bên trên)
         originalRequests._retry = true

@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
-import { CssBaseline } from '@mui/material'
+import { CssBaseline, GlobalStyles } from '@mui/material'
 import theme from './theme.js'
 import { ConfirmProvider } from 'material-ui-confirm'
 import {
@@ -27,6 +27,9 @@ createRoot(document.getElementById('root')).render(
           <ConfirmProvider defaultOptions={{
             confirmationButtonProps: { color: 'secondary', variant: 'outlined' }
           }}>
+            <GlobalStyles styles={{
+              a: { textDecoration: 'none' }
+            }} />
             <CssBaseline />
             <App />
             <ToastContainer />
