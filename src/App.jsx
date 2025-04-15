@@ -5,7 +5,7 @@ import AccountVerifycation from './pages/Auth/AccountVerifycation'
 import { selectCurrentUser } from './redux/user/UserSlice'
 import { useSelector } from 'react-redux'
 import Setting from './pages/Settings/Setting'
-
+import Boards from './pages/Boards'
 /* Protected Routes (Hiểu đơn giản trong dự án của chúng ta là những route chỉ cho truy cập sau khi đã login) */
 const ProtectedRoute = ({ user }) => {
   if (!user) {
@@ -23,6 +23,7 @@ function App() {
       } />
       <Route element={<ProtectedRoute user={currentUser} />}>
         <Route path='/boards/:boardId' element={<Board />} />
+        <Route path='/boards' element={<Boards />} />
         <Route path='/settings/account' element={<Setting />} />
         <Route path='/settings/security' element={<Setting />} />
       </Route>
