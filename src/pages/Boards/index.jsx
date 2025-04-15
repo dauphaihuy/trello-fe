@@ -56,6 +56,11 @@ function Boards() {
     // Lấy giá trị từ query, default sẽ là 1 nếu không tồn tại page tủy chọn.
     // Mặc định kiến thức khác bạn có thể tham khảo thêm parseInt (hệ cơ số 10).
     const page = parseInt(query.get('page') || '1', 10)
+
+    const updateStateData = (res) => {
+        setBoards(res.boards || [])
+        setTotalBoards(res.totalBoards || 0)
+    }
     useEffect(() => {
         // Fake tạm 16 cái item thay cho boards
         // const fakeData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
@@ -66,12 +71,12 @@ function Boards() {
         // useLocation của react-router-dom dùng để đổi theo, đồng nghĩa hàm useEffect sẽ thay
         // đổi theo cái page khi cái location.search đã thay đổi dependencies của useEffect
         // Gọi API lấy danh sách boards ở đây...
-        fetchBoardsAPI(location.search).then(res => {
-            setBoards(res.boards || [])
-            setTotalBoards(res.totalBoards || 0)
-        })
+        fetchBoardsAPI(location.search).then(updateStateData)
     }, [location])
-
+    const afterCreateNewBoard = () => {
+        //fetch lai danh sach board
+        fetchBoardsAPI(location.search).then(updateStateData)
+    }
     if (!boards) {
         return <Loading caption="Loading Boards..." />
     }
@@ -96,7 +101,7 @@ function Boards() {
                             </SidebarItem>
                             <Divider sx={{ my: 1 }} />
                             <Stack direction={'column'} spacing={1}>
-                                <Create />
+                                <Create afterCreateNewBoard={afterCreateNewBoard} />
                             </Stack>
                         </Stack>
                     </Grid>

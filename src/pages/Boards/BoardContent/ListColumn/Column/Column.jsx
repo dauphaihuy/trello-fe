@@ -25,9 +25,10 @@ import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
 import { cloneDeep } from 'lodash'
-import { addNewCardAPI, deleteColumnAPI } from '../../../../../apis'
+import { addNewCardAPI, deleteColumnAPI, updateColumnDetailsAPI } from '../../../../../apis'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '../../../../../redux/activeBoard/activeBoardSlice'
+import ToggleFocusInput from '../../../../../components/Form/ToggleFocusInput'
 
 function Column({ column }) {
     const board = useSelector(selectCurrentActiveBoard)
@@ -103,6 +104,15 @@ function Column({ column }) {
             // deleteColumnDetail(column._id)
         }
     }
+    const onUpdateColumnTitle = (newTitle) => {
+        console.log(newTitle)
+        updateColumnDetailsAPI(column._id, { title: newTitle }).then(() => {
+            const newBoard = cloneDeep(board)
+            const columnToUpdate = newBoard.columns.find(c => c._id === column._id)
+            if (columnToUpdate) columnToUpdate.title = newTitle
+            dispatch(updateCurrentActiveBoard(newBoard))
+        })
+    }
     return (
         <div
             ref={setNodeRef}
@@ -129,7 +139,14 @@ function Column({ column }) {
                     justifyContent: 'space-between'
                 }}>
                     {/* column title */}
-                    <Typography sx={{ fontWeight: 'bold', cursor: 'pointer' }}>{column?.title}</Typography>
+                    {/* <Typography sx={{ fontWeight: 'bold', cursor: 'pointer' }}>
+                        {column?.title}
+                    </Typography> */}
+                    <ToggleFocusInput
+                        data-no-dnd='true'
+                        value={column?.title}
+                        onChangedValue={onUpdateColumnTitle}
+                    />
                     {/* drop down */}
                     <Box>
                         <Tooltip title="More options">
@@ -218,6 +235,7 @@ function Column({ column }) {
                                 type="text"
                                 size="small"
                                 autoFocus
+                                data-no-dnd='true'
                                 value={newCardTitle}
                                 onChange={e => setNewCardTitle(e.target.value)}
                                 sx={{

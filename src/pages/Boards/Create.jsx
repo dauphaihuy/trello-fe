@@ -17,6 +17,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { FIELD_REQUIRED_MESSAGE } from '../../utils/validator'
 import FieldErrorAlert from '../../components/Form/FieldErrorAlert'
 import AbcIcon from '@mui/icons-material/Abc';
+import { createNewBoardAPI } from '../../apis'
 const SidebarItem = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -45,7 +46,7 @@ const BOARD_TYPES = {
  * Popover. Ở đây chỉ nên tạo cái Sidebar cũng dành riêng thành phần để gắn Modal ở để linh hoạt
  * giao diện từ con số 0 cho phù hợp với nhu cầu nhé.
  */
-function Create() {
+function Create({ afterCreateNewBoard }) {
     const { control, register, handleSubmit, reset, formState: { errors } } = useForm()
 
     const [isOpen, setIsOpen] = useState(false)
@@ -56,12 +57,14 @@ function Create() {
         // Reset lại toàn bộ form khi đóng Modal
         reset()
     }
-    const submitCreateNewBoard = (data) => {
-        const { title, description, type } = data
-
-        console.log('Board title: ', title)
-        console.log('Board description: ', description)
-        console.log('Board type: ', type)
+    const submitCreateNewBoard = async (data) => {
+        // const { title, description, type } = data
+        await createNewBoardAPI(data).then(() => {
+            //buoc 1
+            handleCloseModal()
+            //buoc 2
+            afterCreateNewBoard()
+        })
     }
     return (
         <>
