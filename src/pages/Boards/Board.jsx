@@ -19,11 +19,13 @@ import {
 import { cloneDeep } from 'lodash'
 import { useParams } from 'react-router-dom'
 import Loading from '../../components/Loading/Loading'
+import ActiveCard from '../../components/Modal/ActiveCard'
+import { selectCurrentActiveCard } from '../../redux/activeCard/activeCardSlice'
 function Board() {
 
     const dispatch = useDispatch()
     const board = useSelector(selectCurrentActiveBoard)
-
+    const activeCard = useSelector(selectCurrentActiveCard)
     const { boardId } = useParams()
     useEffect(() => {
         // const boarId = '67ef3aa62ffd2d6cd9c6fca8'
@@ -77,6 +79,8 @@ function Board() {
         <Container disableGutters maxWidth={false} sx={{
             height: '100vh'
         }}>
+            {activeCard && <ActiveCard />}
+            {/* <ActiveCard /> */}
             {/* appBar */}
             <AppBar />
             {/* boardBar */}

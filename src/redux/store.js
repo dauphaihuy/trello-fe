@@ -4,6 +4,7 @@ import { userReducer } from './user/UserSlice'
 import { combineReducers } from 'redux' // lưu ý chúng ta có sẵn redux trong node_modules bởi vì khi cài @reduxjs/toolkit là đã có luôn
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // default là localstorage
+import { activeCardReducer } from './activeCard/activeCardSlice'
 // Cấu hình persist
 const rootPersistConfig = {
     key: 'root', // key của cái persist do chúng ta chỉ định, cứ để là root
@@ -13,7 +14,8 @@ const rootPersistConfig = {
 }
 const reducers = combineReducers({
     activeBoard: activeBoardReducer,
-    user: userReducer
+    user: userReducer,
+    activeCard: activeCardReducer
 })
 
 const persistedReducers = persistReducer(rootPersistConfig, reducers)

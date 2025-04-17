@@ -10,7 +10,10 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useDispatch } from 'react-redux'
+import { updateCurrentActiveCard } from '../../../../../../../redux/activeCard/activeCardSlice'
 function Cards({ card }) {
+    const dispatch = useDispatch()
     const {
         isDragging,
         attributes,
@@ -29,8 +32,12 @@ function Cards({ card }) {
     const shouldShowCardActions = () => {
         return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
     }
+    const setActiveCard = () => {
+        dispatch(updateCurrentActiveCard(card))
+    }
     return (
         <Card
+            onClick={setActiveCard}
             ref={setNodeRef}
             style={style}
             {...attributes} {...listeners}

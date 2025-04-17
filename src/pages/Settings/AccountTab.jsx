@@ -10,18 +10,10 @@ import { FIELD_REQUIRED_MESSAGE, singleFileValidator } from '../../utils/validat
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import FieldErrorAlert from '../../components/Form/FieldErrorAlert'
 import { toast } from 'react-toastify'
+import VisuallyHiddenInput from '../../components/Form/VisuallyHiddenInput'
 // Đây là custom để cái input file ở đây: https://mui.com/material-ui/react-button/#file-upload
 // Ngoài ra note rằng thư viện này từ docs của MUI, không recommend nếu cần dùng: https://github.com/vital-software/mui-file-input
-const VisualHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1
-})
+
 function AccountTab() {
     const dispatch = useDispatch()
     const currentUser = useSelector(selectCurrentUser)
@@ -103,7 +95,7 @@ function AccountTab() {
                             size="small"
                         >
                             Upload
-                            <VisualHiddenInput type="file" onChange={uploadAvatar} />
+                            <VisuallyHiddenInput type="file" onChange={uploadAvatar} />
                         </Button>
                     </Tooltip>
                 </Box>
