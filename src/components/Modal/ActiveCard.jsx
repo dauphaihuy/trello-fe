@@ -1,4 +1,4 @@
-import { Box, Grid, Modal, styled, Typography } from '@mui/material'
+import { Box, Grid, Modal, Stack, styled, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { singleFileValidator } from '../../utils/validator'
 import { toast } from 'react-toastify'
@@ -11,11 +11,21 @@ import SubjectIcon from '@mui/icons-material/Subject'
 import CardActivitySection from './CardActivitySection'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-    clearCurrentActiveCard,
+    clearAndHideCurrentActiveCard,
     selectCurrentActiveCard,
+    selectshowModalActiveCard,
     updateCurrentActiveCard
 } from '../../redux/activeCard/activeCardSlice'
 import { updateCardDetailsAPI } from '../../apis'
+import { updateCardInBoard } from '../../redux/activeBoard/activeBoardSlice'
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import ImageIcon from '@mui/icons-material/Image';
+import VisuallyHiddenInput from '../Form/VisuallyHiddenInput'
 const SidebarItem = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -38,11 +48,12 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
     const dispatch = useDispatch()
     const activeCard = useSelector(selectCurrentActiveCard)
+    const isShowModal = useSelector(selectshowModalActiveCard)
     // const [isOpen, setIsOpen] = useState(true)
     // const handleOpenModal = () => setIsOpen(true)
     const handleCloseModal = () => {
         // setIsOpen(false)
-        dispatch(clearCurrentActiveCard())
+        dispatch(clearAndHideCurrentActiveCard())
     }
     //func dùng chung cho các trường hợp update title, description
     const callApiUpdateCard = async (updateData) => {
@@ -50,7 +61,7 @@ function ActiveCard() {
         //b1Ghi chú: Cập nhật, lại cái card đang active trong modal hiện tại
         dispatch(updateCurrentActiveCard(updatedCard))
         //b2 Ghi chú: Cập nhật, lại cái bản ghi card trong activeBoard(nested data)
-        // dispatch(updateCardBoard(updatedCard))
+        dispatch(updateCardInBoard(updatedCard))
         return updatedCard
     }
     const onUpdateCardTitle = (newTitle) => {
@@ -60,8 +71,16 @@ function ActiveCard() {
             title: newTitle.trim()
         })
     }
+    const onupdateCardDescription = (newDescription) => {
+        console.log(newDescription)
+        //goi api
+        callApiUpdateCard({
+            description: newDescription
+        })
+    }
 
     const onUploadCardCover = (event) => {
+        console.log(123)
         console.log(event.target.files[0])
         const error = singleFileValidator(event.target.files[0])
         if (error) {
@@ -70,11 +89,24 @@ function ActiveCard() {
         }
         let reqData = new FormData()
         reqData.append('cardCover', event.target.files[0])
+        //goi api
+        toast.promise(
+            callApiUpdateCard(reqData).finally(() => event.target.value = ''),
+            { pending: 'Updating...' }
+        )
+
+    }
+    //
+    const onAddCardComment = async (commentToAdd) => {
+        console.log(commentToAdd)
+        await callApiUpdateCard({
+            commentToAdd
+        })
     }
     return (
         <Modal
             disableScrollLock
-            open={true}
+            open={isShowModal}
             onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
             sx={{ overflowY: 'auto' }}
 
@@ -106,7 +138,7 @@ function ActiveCard() {
                 {activeCard?.cover && <Box sx={{ mb: 4 }}>
                     <img
                         style={{ width: '100%', height: '320px', borderRadius: '6px', objectFit: 'cover' }}
-                        src="https://picsum.photos/1000"
+                        src={activeCard?.cover}
                         alt="card-cover"
                     />
                 </Box>}
@@ -138,7 +170,10 @@ function ActiveCard() {
                                 </Typography>
                             </Box>
                             {/* Feature 03: Xỉ mô tả của Card */}
-                            <CardDescriptionMdEditor />
+                            <CardDescriptionMdEditor
+                                cardDesciptionProps={activeCard?.description}
+                                handleUpdateCardDescription={onupdateCardDescription}
+                            />
                         </Box>
 
                         <Box sx={{ mb: 3 }}>
@@ -149,10 +184,30 @@ function ActiveCard() {
                                 </Typography>
                             </Box>
                             {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-                            <CardActivitySection />
+                            <CardActivitySection
+                                onAddCardComment={onAddCardComment}
+                                cardComments={activeCard?.comments} />
                         </Box>
                     </Grid>
                     {/* right size */}
+                    <Grid size={{ xs: 12, sm: 3 }}>
+                        <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Add to card</Typography>
+                        <Stack direction={'column'} spacing={1}>
+                            <SidebarItem className='active'>
+                                <PersonOutlineIcon fontSize="small" /> Join
+                            </SidebarItem>
+                            <SidebarItem className='active' component='label'>
+                                <ImageIcon fontSize="small" />
+                                cover
+                                <VisuallyHiddenInput fontSize="small" type="file" onChange={onUploadCardCover} />
+                            </SidebarItem>
+                            <SidebarItem><AttachFileIcon fontSize="small" /> Attachments</SidebarItem>
+                            <SidebarItem><LocalOfferIcon fontSize="small" /> Labels</SidebarItem>
+                            <SidebarItem><TaskAltIcon fontSize="small" /> Checklists   </SidebarItem>
+                            <SidebarItem><WatchLaterIcon fontSize="small" /> Dates</SidebarItem>
+                            <SidebarItem><AutoFixHighIcon fontSize="small" /> Custom Fields</SidebarItem>
+                        </Stack>
+                    </Grid>
                 </Grid>
             </Box>
         </Modal>

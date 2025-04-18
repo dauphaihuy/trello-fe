@@ -4,9 +4,9 @@ import { selectCurrentUser } from '../../redux/user/UserSlice'
 import { Avatar, Box, TextField, Tooltip, Typography } from '@mui/material'
 import moment from 'moment/moment'
 
-function CardActivitySection() {
+function CardActivitySection({ cardComments = [], onAddCardComment }) {
     const currentUser = useSelector(selectCurrentUser)
-
+    console.log(cardComments)
     const handleAddCardComment = (event) => {
         // Bắt hành động được nhận phím Enter & không phải hành động Shift + Enter
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -17,7 +17,9 @@ function CardActivitySection() {
                     userDisplayName: currentUser?.displayName,
                     content: event.target.value.trim()
                 }
-                console.log(commentToAdd)
+                onAddCardComment(commentToAdd).then(() => {
+                    event.target.value = ''
+                })
             }
         }
     }
@@ -43,21 +45,21 @@ function CardActivitySection() {
                     No activity found!
                 </Typography>
             )}
-            {[...Array(3)].map((_, index) =>
+            {cardComments.map((comment, index) =>
                 <Box sx={{ display: 'flex', gap: 1, width: '100%', mb: 1.5 }} key={index}>
                     <Tooltip title="trungquandev" >
                         <Avatar
                             sx={{ width: 36, cursor: 'pointer' }}
                             alt="trungquandev"
-                            src="https://picsum.photos/100"
+                            src={comment?.userAvatar}
                         />
                     </Tooltip>
                     <Box sx={{ width: 'inherit' }}>
                         <Typography variant="span" sx={{ fontWeight: 'bold', mr: 1 }}>
-                            Quan Do
+                            {comment?.userDisplayName}
                         </Typography>
                         <Typography variant="span" sx={{ fontSize: '12px' }}>
-                            {moment().format('llll')}
+                            {moment(comment?.commentedAt).format('llll')}
                         </Typography>
                         <Box sx={{
                             display: 'block',
@@ -69,7 +71,7 @@ function CardActivitySection() {
                             wordBreak: 'break-word',
                             boxShadow: '0 1px rgba(0, 0, 0, 0.2)'
                         }}>
-                            This is a comment!
+                            {comment?.content}
                         </Box>
                     </Box>
                 </Box>

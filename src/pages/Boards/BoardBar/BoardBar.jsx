@@ -5,8 +5,6 @@ import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import LanguageIcon from '@mui/icons-material/Language'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { capitalizeFirstLetter } from '../../../utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
@@ -87,7 +85,7 @@ function BoardBar({ board }) {
                     }}
                 >Invite</Button>
                 {/* hiển thị ds tv board */}
-                <BoardUserGroup />
+                <BoardUserGroup boardUsers={board?.FE_allUsers} />
             </Box>
         </Box>
     )

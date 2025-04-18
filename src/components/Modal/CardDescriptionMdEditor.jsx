@@ -15,16 +15,16 @@ import ReactDOM from 'react-dom';
 import MDEditor from '@uiw/react-md-editor';
 \`\`\`
 `
-function CardDescriptionMdEditor() {
+function CardDescriptionMdEditor({ cardDesciptionProps, handleUpdateCardDescription }) {
     const { mode } = useColorScheme()
 
     // State xử lý Edit và chế độ View
     const [markdownEditMode, setMarkdownEditMode] = useState(false)
-    const [cardDescription, setCardDescription] = useState(markdownValueExample)
+    const [cardDescription, setCardDescription] = useState(cardDesciptionProps)
 
     const updateCardDescription = () => {
         setMarkdownEditMode(false)
-        console.log('cardDescription:', cardDescription)
+        handleUpdateCardDescription(cardDescription)
     }
     return (
         <Box sx={{ mt: -4 }}>
@@ -69,8 +69,8 @@ function CardDescriptionMdEditor() {
                                 source={cardDescription}
                                 style={{
                                     whiteSpace: 'pre-wrap',
-                                    padding: '10px',
-                                    border: '0.5px solid rgba(0, 0, 0, 0.2)',
+                                    padding: cardDescription ? '10px' : '0px',
+                                    border: cardDescription ? '0.5px solid rgba(0, 0, 0, 0.2)' : '',
                                     borderRadius: '8px'
                                 }}
                             />

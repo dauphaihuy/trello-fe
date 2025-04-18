@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDispatch } from 'react-redux'
-import { updateCurrentActiveCard } from '../../../../../../../redux/activeCard/activeCardSlice'
+import { showModalActiveCard, updateCurrentActiveCard } from '../../../../../../../redux/activeCard/activeCardSlice'
 function Cards({ card }) {
     const dispatch = useDispatch()
     const {
@@ -34,6 +34,7 @@ function Cards({ card }) {
     }
     const setActiveCard = () => {
         dispatch(updateCurrentActiveCard(card))
+        dispatch(showModalActiveCard())
     }
     return (
         <Card
@@ -58,9 +59,9 @@ function Cards({ card }) {
             </CardContent>
             {shouldShowCardActions() &&
                 <CardActions sx={{ p: '0 4px 8px 4px' }}>
-                    {!!card?.memberIds.length && <Button size="small" startIcon={<GroupIcon />}>{card?.memberIds?.length}</Button>}
-                    {!!card?.comments.length && <Button size="small" startIcon={<ChatBubbleOutlineIcon />}>{card?.comments?.length}</Button>}
-                    {!!card?.attachments.length && <Button size="small" startIcon={<AttachFileIcon />}>{card?.attachments?.length}</Button>}
+                    {!!card?.memberIds?.length && <Button size="small" startIcon={<GroupIcon />}>{card?.memberIds?.length}</Button>}
+                    {!!card?.comments?.length && <Button size="small" startIcon={<ChatBubbleOutlineIcon />}>{card?.comments?.length}</Button>}
+                    {!!card?.attachments?.length && <Button size="small" startIcon={<AttachFileIcon />}>{card?.attachments?.length}</Button>}
                 </CardActions>}
         </Card>
     )

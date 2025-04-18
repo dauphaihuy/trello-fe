@@ -25,7 +25,6 @@ function Board() {
 
     const dispatch = useDispatch()
     const board = useSelector(selectCurrentActiveBoard)
-    const activeCard = useSelector(selectCurrentActiveCard)
     const { boardId } = useParams()
     useEffect(() => {
         // const boarId = '67ef3aa62ffd2d6cd9c6fca8'
@@ -79,7 +78,7 @@ function Board() {
         <Container disableGutters maxWidth={false} sx={{
             height: '100vh'
         }}>
-            {activeCard && <ActiveCard />}
+            <ActiveCard />
             {/* <ActiveCard /> */}
             {/* appBar */}
             <AppBar />
