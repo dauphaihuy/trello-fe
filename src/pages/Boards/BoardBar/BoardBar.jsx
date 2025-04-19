@@ -8,6 +8,7 @@ import LanguageIcon from '@mui/icons-material/Language'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { capitalizeFirstLetter } from '../../../utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 const MENU_STYLES = {
     color: 'white',
     bgcolor: 'transparent',
@@ -72,18 +73,8 @@ function BoardBar({ board }) {
             <Box sx={{
                 display: 'flex', alignItems: 'center', gap: 2
             }}>
-
-                <Button
-                    variant='outlined'
-                    startIcon={<PersonAddAltIcon />}
-                    sx={{
-                        color: 'white',
-                        borderColor: 'white',
-                        '&:hover': {
-                            borderColor: 'white'
-                        }
-                    }}
-                >Invite</Button>
+                {/* xử lý mời user vào làm thành viên */}
+                <InviteBoardUser boardId={board._id} />
                 {/* hiển thị ds tv board */}
                 <BoardUserGroup boardUsers={board?.FE_allUsers} />
             </Box>
