@@ -19,7 +19,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={
-        <Navigate to={'/boards/67ef3aa62ffd2d6cd9c6fca8'} replace={true} />
+        <Navigate to={'/boards'} replace={true} />
       } />
       <Route element={<ProtectedRoute user={currentUser} />}>
         <Route path='/boards/:boardId' element={<Board />} />

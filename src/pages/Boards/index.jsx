@@ -22,7 +22,6 @@ import HomeIcon from '@mui/icons-material/Home'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 
 import Create from './create'
-import randomColor from 'randomcolor'
 import { fetchBoardsAPI } from '../../apis'
 import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_PAGE } from '../../utils/constants'
 const SidebarItem = styled(Box)(({ theme }) => ({

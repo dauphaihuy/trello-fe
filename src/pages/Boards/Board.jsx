@@ -27,7 +27,6 @@ function Board() {
     const board = useSelector(selectCurrentActiveBoard)
     const { boardId } = useParams()
     useEffect(() => {
-        // const boarId = '67ef3aa62ffd2d6cd9c6fca8'
         dispatch(fetchBoardDetailsAPI(boardId))
     }, [dispatch, boardId])
 
