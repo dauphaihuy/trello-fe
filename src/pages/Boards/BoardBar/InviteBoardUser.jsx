@@ -5,6 +5,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import FieldErrorAlert from '../../../components/Form/FieldErrorAlert'
 import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE } from '../../../utils/validator'
 import { inviteUserToBoardAPI } from '../../../apis/index'
+import { socketIoInstance } from '../../../main'
 function InviteBoardUser({ boardId }) {
     const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
     const isOpenPopover = Boolean(anchorPopoverElement)
@@ -17,13 +18,14 @@ function InviteBoardUser({ boardId }) {
 
     const submitInviteUserToBoard = (data) => {
         const { inviteeEmail } = data
-        console.log('inviteeEmail:', inviteeEmail)
-        inviteUserToBoardAPI({ inviteeEmail, boardId }).then(() => {
+        inviteUserToBoardAPI({ inviteeEmail, boardId }).then(invitation => {
+            console.log(invitation)
             // Clear the input using react-hook-form's setValue
             setValue('inviteeEmail', null)
             setAnchorPopoverElement(null)
-            // Khi một người dùng vào board xong thì cũng sẽ gửi/nhận sự kiện socket lên server (thời gian real-time)
-            // ...
+            // Khi một người dùng vào board xong thì cũng sẽ gửi/nhận sự kiện socket lên server
+            // (thời gian real-time) > FE_USER_INVITED_TO_BOARD
+            socketIoInstance.emit('FE_USER_INVITED_TO_BOARD', invitation)
         })
     }
     return (

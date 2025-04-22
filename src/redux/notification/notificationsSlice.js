@@ -9,14 +9,14 @@ export const fetchInvitationsAPI = createAsyncThunk(
     'notifications/fetchInvitationsAPI',
     async () => {
         const response = await authorizeAxiosInstance.get(`${API_ROOT}/v1/invitations`)
-        // Vue.js: axios sẽ trả về qua property của nó là data
+        // axios sẽ trả về qua property của nó là data
         return response.data
     }
 )
 export const updateBoardInvitationAPI = createAsyncThunk(
     'notifications/updateBoardInvitationAPI',
     async ({ notificationId, status }) => {
-        const response = await authorizeAxiosInstance.put(`${API_ROOT}/invitations/board/${notificationId}`, {
+        const response = await authorizeAxiosInstance.put(`${API_ROOT}/v1/invitations/board/${notificationId}`, {
             status
         })
         return response.data
@@ -35,6 +35,7 @@ export const notificationsSlice = createSlice({
         },
         addNotification: (state, action) => {
             const incomingInvitation = action.payload
+            console.log(incomingInvitation)
             // unshift để thêm phần tử vào đầu mảng, ngược lại với push
             state.currentNotifications.unshift(incomingInvitation)
         }
@@ -55,7 +56,7 @@ export const notificationsSlice = createSlice({
     }
 })
 // Actions are generated for each case reducer function
-const {
+export const {
     clearCurrentNotifications,
     updateCurrentNotifications,
     addNotification
