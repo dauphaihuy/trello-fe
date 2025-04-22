@@ -47,8 +47,10 @@ export const activeBoardSlice = createSlice({
         builder.addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
             //
             let board = action.payload
+            console.log(board)
             //thành viên trong board sẽ gộp 2 array owners và members
             board.FE_allUsers = board.owners.concat(board.members)
+            console.log(board.FE_allUsers)
             board.columns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
             board.columns.forEach(column => {
                 if (isEmpty(column.cards)) {

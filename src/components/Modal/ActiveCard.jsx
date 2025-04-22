@@ -18,14 +18,16 @@ import {
 } from '../../redux/activeCard/activeCardSlice'
 import { updateCardDetailsAPI } from '../../apis'
 import { updateCardInBoard } from '../../redux/activeBoard/activeBoardSlice'
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import ImageIcon from '@mui/icons-material/Image';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import TaskAltIcon from '@mui/icons-material/TaskAlt'
+import WatchLaterIcon from '@mui/icons-material/WatchLater'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import ImageIcon from '@mui/icons-material/Image'
 import VisuallyHiddenInput from '../Form/VisuallyHiddenInput'
+import { selectCurrentUser } from '../../redux/user/UserSlice'
+import { CARD_MEMBER_ACTIONS } from '../../utils/constants'
 const SidebarItem = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -48,6 +50,7 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
     const dispatch = useDispatch()
     const activeCard = useSelector(selectCurrentActiveCard)
+    console.log(activeCard)
     const isShowModal = useSelector(selectshowModalActiveCard)
     // const [isOpen, setIsOpen] = useState(true)
     // const handleOpenModal = () => setIsOpen(true)
@@ -98,11 +101,17 @@ function ActiveCard() {
     }
     //
     const onAddCardComment = async (commentToAdd) => {
-        console.log(commentToAdd)
         await callApiUpdateCard({
             commentToAdd
         })
     }
+    const onUpdateCardMembers = (incomingMemberInfo) => {
+        callApiUpdateCard({
+            incomingMemberInfo
+        })
+    }
+    const currentUser = useSelector(selectCurrentUser)
+
     return (
         <Modal
             disableScrollLock
@@ -159,7 +168,10 @@ function ActiveCard() {
                                 Members
                             </Typography>
                             {/* Feature 02: Xỉ các thành viên của Card */}
-                            <CardUserGroup />
+                            <CardUserGroup
+                                cardMemberIds={activeCard?.memberIds}
+                                onUpdateCardMembers={onUpdateCardMembers}
+                            />
                         </Box>
 
                         <Box sx={{ mb: 3 }}>
@@ -193,9 +205,17 @@ function ActiveCard() {
                     <Grid size={{ xs: 12, sm: 3 }}>
                         <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Add to card</Typography>
                         <Stack direction={'column'} spacing={1}>
-                            <SidebarItem className='active'>
-                                <PersonOutlineIcon fontSize="small" /> Join
-                            </SidebarItem>
+                            {!activeCard?.memberIds?.includes(currentUser?._id) &&
+                                <SidebarItem
+                                    onClick={() => onUpdateCardMembers({
+                                        userId: currentUser._id,
+                                        action: CARD_MEMBER_ACTIONS.ADD
+                                    })}
+                                    className='active'>
+                                    <PersonOutlineIcon fontSize="small" /> Join
+                                </SidebarItem>
+                            }
+
                             <SidebarItem className='active' component='label'>
                                 <ImageIcon fontSize="small" />
                                 cover

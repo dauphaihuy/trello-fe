@@ -8,8 +8,6 @@ import {
     moveCardToDiffColumnAPI,
     updateColumnDetailsAPI
 } from '../../apis'
-import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     fetchBoardDetailsAPI,
@@ -20,7 +18,6 @@ import { cloneDeep } from 'lodash'
 import { useParams } from 'react-router-dom'
 import Loading from '../../components/Loading/Loading'
 import ActiveCard from '../../components/Modal/ActiveCard'
-import { selectCurrentActiveCard } from '../../redux/activeCard/activeCardSlice'
 function Board() {
 
     const dispatch = useDispatch()

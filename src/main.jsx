@@ -19,9 +19,7 @@ const persistor = persistStore(store)
 //kỹ thuật injectstore
 import { injectStore } from './utils/authorizeAxios.js'
 injectStore(store)
-import { io } from 'socket.io-client'
-import { API_ROOT } from './utils/constants.js'
-export const socketIoInstance = io(API_ROOT)
+
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <BrowserRouter basename='/' >

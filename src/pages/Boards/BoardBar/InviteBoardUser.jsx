@@ -5,7 +5,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import FieldErrorAlert from '../../../components/Form/FieldErrorAlert'
 import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE } from '../../../utils/validator'
 import { inviteUserToBoardAPI } from '../../../apis/index'
-import { socketIoInstance } from '../../../main'
+import { socketIoInstance } from '../../../socketClient'
 function InviteBoardUser({ boardId }) {
     const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
     const isOpenPopover = Boolean(anchorPopoverElement)
@@ -19,7 +19,6 @@ function InviteBoardUser({ boardId }) {
     const submitInviteUserToBoard = (data) => {
         const { inviteeEmail } = data
         inviteUserToBoardAPI({ inviteeEmail, boardId }).then(invitation => {
-            console.log(invitation)
             // Clear the input using react-hook-form's setValue
             setValue('inviteeEmail', null)
             setAnchorPopoverElement(null)
@@ -68,7 +67,10 @@ function InviteBoardUser({ boardId }) {
                                 variant="outlined"
                                 {...register('inviteeEmail', {
                                     required: FIELD_REQUIRED_MESSAGE,
-                                    pattern: EMAIL_RULE,
+                                    pattern: {
+                                        value: EMAIL_RULE,
+                                        message: EMAIL_RULE_MESSAGE
+                                    }
                                 })}
                                 error={!!errors['inviteeEmail']}
                             />

@@ -17,7 +17,6 @@ import VisuallyHiddenInput from '../../components/Form/VisuallyHiddenInput'
 function AccountTab() {
     const dispatch = useDispatch()
     const currentUser = useSelector(selectCurrentUser)
-    console.log(currentUser)
     // Thông tin của user để init vào form (key tương ứng với register phía dưới Field)
     const initialGeneralForm = {
         displayName: currentUser?.displayName
@@ -35,7 +34,6 @@ function AccountTab() {
 
     }
     const uploadAvatar = (e) => {
-        console.log('e.target.files[0]', e.target?.files[0])
         const error = singleFileValidator(e.target?.files[0])
         if (error) {
             toast.error(error)
@@ -45,7 +43,6 @@ function AccountTab() {
         // Sử dụng FormData để xử lý dữ liệu liên quan tới file khi gọi API
         let reqData = new FormData()
         reqData.append('avatar', e.target?.files[0]) // Cách để lấy được dữ liệu từ FormData
-        console.log(reqData)
         // for (const value of reqData.values()) {
         //     console.log('reqData value:', value)
         // }

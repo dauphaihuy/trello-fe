@@ -6,7 +6,6 @@ import moment from 'moment/moment'
 
 function CardActivitySection({ cardComments = [], onAddCardComment }) {
     const currentUser = useSelector(selectCurrentUser)
-    console.log(cardComments)
     const handleAddCardComment = (event) => {
         // Bắt hành động được nhận phím Enter & không phải hành động Shift + Enter
         if (event.key === 'Enter' && !event.shiftKey) {

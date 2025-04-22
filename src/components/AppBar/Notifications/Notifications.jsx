@@ -11,9 +11,9 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import DoneIcon from '@mui/icons-material/Done'
 import NotInterestedIcon from '@mui/icons-material/NotInterested'
 import moment from 'moment'
-import { socketIoInstance } from '../../../main'
 import { selectCurrentUser } from '../../../redux/user/UserSlice'
 import { useNavigate } from 'react-router-dom'
+import { socketIoInstance } from '../../../socketClient'
 const BOARD_INVITATION_STATUS = {
     PENDING: 'PENDING',
     ACCEPTED: 'ACCEPTED',
@@ -40,12 +40,9 @@ function Notifications() {
         dispatch(fetchInvitationsAPI())
         //tạo 1 func xử lý khi nhận dược sk realtime https://socket.io/how-to/use-with-react
         const onReceiveNewInvitation = (invitation) => {
-            console.log('onReceiveNewInvitation')
-            console.log(invitation)
             //nếu user đang đăng nhập hiện tại mà chúng ta đang lưu trong redux chính là invitee trong
             // bản ghi invitation
             if (invitation.invitee._id === currentUser._id) {
-                console.log('//them ban ghi invitation mới vào trong redux')
                 //them ban ghi invitation mới vào trong redux
                 dispatch(addNotification(invitation))
                 // cập nhật trạng thái đang có thông báo đến
@@ -61,7 +58,6 @@ function Notifications() {
 
     const updateBoardInvitation = (notificationId, status) => {
         dispatch(updateBoardInvitationAPI({ notificationId, status })).then((res) => {
-            console.log(res.payload.boardInvitation)
             if (res.payload.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
                 navigate(`/boards/${res.payload.boardInvitation.boardId}`)
             }
