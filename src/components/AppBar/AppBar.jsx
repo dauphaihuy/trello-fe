@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Notifications from './Notifications/Notifications'
+import AutoCompleteSearchBoard from './SearchBoards/AutoCompleteSearchBoard'
 function AppBar() {
     const [searchValue, setSearchValue] = useState('')
     return (
@@ -83,7 +84,8 @@ function AppBar() {
                 gap: 2
             }}>
                 {/* search */}
-                <TextField
+                <AutoCompleteSearchBoard />
+                {/* <TextField
                     sx={{
                         minWidth: '120px',
                         maxWidth: 170,
@@ -116,7 +118,7 @@ function AppBar() {
                             )
                         },
                     }}
-                />
+                /> */}
                 {/* chon theme */}
                 <ModeSelect />
                 {/* bell */}
